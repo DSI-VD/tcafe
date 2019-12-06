@@ -1,0 +1,5 @@
+.idea
+.build/
+tcafe.iml
+composer.lock
+.php_cs.cache
