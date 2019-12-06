@@ -1,0 +1,26 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:n="http://typo3.org/ns/GeorgRinger/News/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<!-- build a filter block <f:render partial="Filters" arguments="{name:filter, label:Filter, filters:filters}" /> -->
+
+<f:section name="filter">
+
+    <f:if filters.size>
+        <form>
+            <f:for each="{filters}" as="filter">
+
+                {filter.type}
+                <f:if condition="{filter.type}">
+                    <f:render section="Partials/Filters/Input" arguments="{}" />
+                </f:if>
+
+            </f:for>
+        </form>
+    </f:if>
+
+</f:section>
+
+<f:render section="filter" arguments="{filters: filters}" />
+
+</html>
