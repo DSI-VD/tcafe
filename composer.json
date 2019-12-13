@@ -1,0 +1,53 @@
+{
+	"name": "vd/tcafe",
+	"type": "typo3-cms-extension",
+	"description": "Mix tea and coffee",
+	"homepage": "https://github.com/DSI-VD/tcafe",
+	"license": [
+		"GPL-2.0-or-later"
+	],
+	"keywords": [
+		"TYPO3 CMS"
+	],
+	"version": "0.0.1-dev",
+	"authors": [
+		{
+			"name": "Etat de Vaud - DGNSI",
+			"email": "support.typo3@vd.ch"
+		}
+	],
+	"repositories": [
+		{
+			"type": "composer",
+			"url": "https://composer.typo3.org/"
+		}
+	],
+	"require": {
+		"php": ">=7.2.0",
+		"typo3/cms-core": "^8.7 || ^9.5"
+	},
+	"require-dev": {
+		"helmich/typo3-typoscript-lint": "^2.0",
+		"friendsofphp/php-cs-fixer": "^2.15"
+	},
+	"autoload": {
+		"psr-4": {
+			"Vd\\TCAFE\\": "Classes/"
+		}
+	},
+	"config": {
+		"optimize-autoloader": true,
+		"vendor-dir": ".build/vendor",
+		"bin-dir": ".build/bin"
+	},
+	"extra": {
+		"typo3/cms": {
+			"cms-package-dir": "{$vendor-dir}/typo3/cms",
+			"web-dir": ".build/web"
+		}
+	},
+	"scripts": {
+		"php-cs-fixer": "php-cs-fixer --rules=@PSR2",
+		"typoscript-lint": "typoscript-lint"
+	}
+}
