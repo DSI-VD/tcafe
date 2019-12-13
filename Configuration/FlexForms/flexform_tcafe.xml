@@ -17,6 +17,25 @@
                             </config>
                         </TCEforms>
                     </settings.configurationFilePath>
+                    <switchableControllerActions>
+                        <TCEforms>
+                            <label>Action</label>
+                            <config>
+                                <type>select</type>
+                                <renderType>selectSingle</renderType>
+                                <items>
+                                    <numIndex index="1">
+                                        <numIndex index="0">Show</numIndex>
+                                        <numIndex index="1">Tcafe->show</numIndex>
+                                    </numIndex>
+                                    <numIndex index="2">
+                                        <numIndex index="0">List</numIndex>
+                                        <numIndex index="1">Tcafe->list</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </switchableControllerActions>
                 </el>
             </ROOT>
         </sDEF>

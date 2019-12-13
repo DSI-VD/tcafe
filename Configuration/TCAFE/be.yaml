@@ -1,0 +1,9 @@
+# non lisible dans le BE
+table: be_users
+list:
+  fields:
+    username:
+      label: Username
+detail:
+  pid: 123
+  tcaType: fe

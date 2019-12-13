@@ -1,21 +1,23 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-      xmlns:n="http://typo3.org/ns/GeorgRinger/News/ViewHelpers"
-      data-namespace-typo3-fluid="true">
-
-<!-- build a List -->
-
-<!-- render filter -->
-Render filter
-
-
-<!-- render infos -->
-<!-- render pagination -->
-
-<!-- render data -->
-
-Render list or table
-
-<!-- render pagination -->
-<!-- render infos -->
-
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<table>
+    <f:for each="{rows}" as="row" iteration="it">
+        <f:if condition="{it.isFirst}">
+            <tr>
+                <f:for each="{row}" as="field">
+                    <th>{field.configuration.label}</th>
+                </f:for>
+            </tr>
+        </f:if>
+    </f:for>
+    <f:for each="{rows}" as="row" iteration="it">
+        <tr>
+            <f:for each="{row}" as="field">
+                <f:debug>{field}</f:debug>
+                <td>
+                    <f:render partial="Types/{field.type}" arguments="{field: field}"/>
+                </td>
+            </f:for>
+        </tr>
+    </f:for>
+</table>
 </html>
