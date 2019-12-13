@@ -32,7 +32,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Vd\\TcaFe\\": "Classes/"
+			"Vd\\Tcafe\\": "Classes/"
 		}
 	},
 	"config": {

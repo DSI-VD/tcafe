@@ -1,5 +1,5 @@
 <?php
-namespace Vd\TcaFe\Utility;
+namespace Vd\Tcafe\Utility;
 
 /**
  * Utilities for extension configuration.

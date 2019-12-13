@@ -1,10 +1,10 @@
 <?php
-namespace Vd\TcaFe\Utility;
+namespace Vd\Tcafe\Utility;
 
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
-class TcaFeController extends ActionController
+class TcafeController extends ActionController
 {
     public function listAction()
     {
