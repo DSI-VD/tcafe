@@ -1,0 +1,48 @@
+<T3DataStructure>
+    <sheets>
+        <!--
+            ################################
+              SHEET General Settings
+            ################################
+        -->
+        <sDEF>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>TcaFe</sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <settings.configurationFilePath>
+                        <TCEforms>
+                            <label>Configuration file path</label>
+                            <config>
+                                <default></default>
+                                <type>input</type>
+                                <size>15</size>
+                            </config>
+                        </TCEforms>
+                    </settings.configurationFilePath>
+                    <switchableControllerActions>
+                        <TCEforms>
+                            <label>Action</label>
+                            <config>
+                                <type>select</type>
+                                <renderType>selectSingle</renderType>
+                                <items>
+                                    <numIndex index="1">
+                                        <numIndex index="0">Show</numIndex>
+                                        <numIndex index="1">TcaFe->show</numIndex>
+                                    </numIndex>
+                                    <numIndex index="2">
+                                        <numIndex index="0">List</numIndex>
+                                        <numIndex index="1">TcaFe->list</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </switchableControllerActions>
+                </el>
+            </ROOT>
+        </sDEF>
+    </sheets>
+</T3DataStructure>
