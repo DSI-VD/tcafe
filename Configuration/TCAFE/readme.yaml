@@ -1,0 +1,25 @@
+# non lisible dans le BE
+table: fe_users
+list:
+  fluidVariableName: 'users'
+  templateName: 'EXT:toto/Resources/Private/Templates/UserList.html'
+  fields:
+    first_name:
+      label: Test
+    last_name:
+      label: Name
+      crop:
+        maxCharacters: 2
+
+    username:
+      label: Username
+    usergroup:
+      label: Groups
+#    sexe:
+#      label: Sexe
+#      options:
+#        0: Feminin
+#        1: Masculin
+detail:
+  pid: 123
+  tcaType: fe
