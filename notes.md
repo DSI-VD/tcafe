@@ -75,3 +75,5 @@ page.10 {
    template.file = fileadmin/template.html
 }
 
+<h1>hello</h1>
+<f:cObject typoscriptObjectPath="lib.content.render" data="{colPos:0}" />
