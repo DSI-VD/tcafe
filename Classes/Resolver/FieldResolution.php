@@ -5,7 +5,6 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 class FieldResolution
 {
-
     /**
      * @var string
      */
@@ -58,7 +57,7 @@ class FieldResolution
                 if ($tcaColumn['config']['foreign_table'] === 'sys_file_reference') {
                     $this->config['type'] = 'File';
                 } else {
-                    $this->config['type'] = 'Text';
+                    $this->config['type'] = 'Relation';
                 }
                 break;
             default:

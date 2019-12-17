@@ -1,13 +1,10 @@
 <?php
 namespace Vd\Tcafe\Controller;
 
-use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use Vd\Tcafe\Resolver\DataResolver;
-use Vd\Tcafe\Utility\ConfigurationUtility;
 use Vd\Tcafe\Validator\ConfigurationValidator;
 
 class TcafeController extends ActionController
@@ -23,6 +20,11 @@ class TcafeController extends ActionController
     private $dataResolver = null;
 
     /**
+     * @var string
+     */
+    private $fluidVariableName = 'rows';
+
+    /**
      * Load and validate the configuration file.
      */
     public function initializeAction()
@@ -32,6 +34,10 @@ class TcafeController extends ActionController
         $action = $this->request->getControllerActionName();
         ConfigurationValidator::validate($this->configuration, $action);
         $this->dataResolver = GeneralUtility::makeInstance(DataResolver::class);
+
+        if (isset($this->configuration[$this->request->getControllerActionName()]['fluidVariableName'])) {
+            $this->fluidVariableName = $this->configuration[$this->request->getControllerActionName()]['fluidVariableName'];
+        }
     }
 
     public function listAction()
@@ -42,7 +48,7 @@ class TcafeController extends ActionController
         );
 
         $this->view->assignMultiple([
-            'rows' => $rows,
+            $this->fluidVariableName => $rows,
             'configuration' => $this->configuration
         ]);
     }

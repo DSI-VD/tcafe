@@ -1,9 +1,6 @@
 <?php
 namespace Vd\Tcafe\Utility;
 
-/**
- * Utilities for extension configuration.
- */
 class ConfigurationUtility
 {
     const EXT_KEY = 'tcafe';

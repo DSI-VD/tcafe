@@ -1,10 +1,9 @@
 <?php
 namespace Vd\Tcafe\Resolver;
 
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use Vd\Tcafe\Validator\ConfigurationValidator;
 
 class DataResolver
@@ -33,21 +32,26 @@ class DataResolver
         $data = [];
         $rows = $statement->fetchAll();
 
-        foreach ($rows as $key => $row) {
-            foreach ($row as $field => $value) {
-                $configuration[$action]['fields'][$field]['visible'] = true;
-                // @todo bug uid???
-                if (in_array($field, ConfigurationValidator::IGNORE_FIELDS) && $configuration[$action]['fields'][$field]) {
-                    $configuration[$action]['fields'][$field]['visible'] = false;
-                }
+        if (!isset($configuration[$action]['fluidVariableName'])) {
+            foreach ($rows as $key => $row) {
+                foreach ($row as $field => $value) {
+                    $configuration[$action]['fields'][$field]['visible'] = true;
+                    // @todo bug uid???
+                    if (in_array($field,
+                            ConfigurationValidator::IGNORE_FIELDS) && $configuration[$action]['fields'][$field]) {
+                        $configuration[$action]['fields'][$field]['visible'] = false;
+                    }
 
-                $data[$key][] = new FieldResolution(
-                    $field,
-                    $value,
-                    $configuration[$action]['fields'][$field] ?? [],
-                    $GLOBALS['TCA'][$configuration['table']]['columns'][$field] ?? []
-                );
+                    $data[$key][$field] = new FieldResolution(
+                        $field,
+                        $value,
+                        $configuration[$action]['fields'][$field] ?? [],
+                        $GLOBALS['TCA'][$configuration['table']]['columns'][$field] ?? []
+                    );
+                }
             }
+        } else {
+            $data = $rows;
         }
 
         return $data;

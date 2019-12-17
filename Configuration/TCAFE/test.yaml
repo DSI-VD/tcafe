@@ -1,8 +1,7 @@
 # non lisible dans le BE
 table: fe_users
 list:
-  fluidVariableName: 'users'
-  templateName: 'EXT:toto/Resources/Private/Templates/UserList.html'
+  templateName: 'EXT:vd_base/Resources/Private/Templates/UserList.html'
   fields:
     first_name:
       label: Test
