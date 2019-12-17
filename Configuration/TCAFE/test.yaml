@@ -7,14 +7,21 @@ list:
     first_name:
       label: Test
     last_name:
-      label: Name
       crop:
         maxCharacters: 2
-
     username:
       label: Username
+    image:
+      label: Image de profile
+    uid:
+      label: Le numéro du client
     usergroup:
       label: Groups
+      fields:
+        crdate:
+          label: Date de création
+        title:
+          label: Nom du groupe
 #    sexe:
 #      label: Sexe
 #      options:

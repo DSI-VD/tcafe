@@ -5,52 +5,49 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use Vd\Tcafe\Validator\ConfigurationValidator;
 
 class DataResolver
 {
     /**
-     * @var array
-     */
-    protected $configuration = [];
-
-    /**
-     * @param $configuration
-     */
-    public function __construct($configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
-    /**
-     * @param string $table
-     * @param array $fields
-     * @param string $whereClause
+     * @param array $configuration
+     * @param string $action
      * @return array
      */
-    public function resolve(string $table, array $fields, string $whereClause = ''): array
+    public function resolve(array $configuration, string $action): array
     {
         /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($configuration['table']);
 
-        foreach ($fields as $field) {
-            $queryBuilder->addSelect($field);
+        foreach ($configuration[$action]['fields'] as $key => $field) {
+            $queryBuilder->addSelect($key);
         }
 
+        $queryBuilder->addSelect('uid');
+        $queryBuilder->addSelect('pid');
+
         $statement = $queryBuilder
-            ->from($table)
+            ->from($configuration['table'])
             ->execute();
 
         $data = [];
         $rows = $statement->fetchAll();
 
         foreach ($rows as $key => $row) {
-            foreach ($row as $field => $value)
-            $data[$key][] = new FieldResolution(
-                $field,
-                $value,
-                $this->configuration['list']['fields'][$field],
-                $GLOBALS['TCA'][$table]['columns'][$field]
-            );
+            foreach ($row as $field => $value) {
+                $configuration[$action]['fields'][$field]['visible'] = true;
+                // @todo bug uid???
+                if (in_array($field, ConfigurationValidator::IGNORE_FIELDS) && $configuration[$action]['fields'][$field]) {
+                    $configuration[$action]['fields'][$field]['visible'] = false;
+                }
+
+                $data[$key][] = new FieldResolution(
+                    $field,
+                    $value,
+                    $configuration[$action]['fields'][$field] ?? [],
+                    $GLOBALS['TCA'][$configuration['table']]['columns'][$field] ?? []
+                );
+            }
         }
 
         return $data;

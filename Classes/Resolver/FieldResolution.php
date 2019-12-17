@@ -1,15 +1,10 @@
 <?php
 namespace Vd\Tcafe\Resolver;
 
-
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 class FieldResolution
 {
-    /**
-     * @var string
-     */
-    protected $type = '';
 
     /**
      * @var string
@@ -17,63 +12,59 @@ class FieldResolution
     protected $name = '';
 
     /**
-     * @var string
+     * @var mixed
      */
-    protected $value = '';
+    protected $value;
 
     /**
      * @var array
      */
-    protected $configuration = [];
+    protected $config = [];
 
     /**
      * @param string $name
      * @param string $value
-     * @param array $configuration
+     * @param array $config
      * @param array $tcaColumn
      */
-    public function __construct($name, $value, array $configuration, array $tcaColumn)
+    public function __construct($name, $value, array $config, array $tcaColumn)
     {
         $this->name = $name;
         $this->value = $value;
-        $this->configuration = $configuration;
+        $this->config = $config;
+        if (!isset($this->config['label'])) {
+            $this->config['label'] = $tcaColumn['label'];
+        }
+        if (strpos($this->config['label'], 'LLL:') !== false) {
+            $this->config['label'] = LocalizationUtility::translate($this->config['label']);
+        }
         switch ($tcaColumn['config']['type']) {
             case 'input':
                 if (isset($tcaColumn['config']['renderType'])) {
                     switch ($tcaColumn['config']['renderType']) {
                         case 'inputDateTime':
-                            $this->type = 'Date';
+                            $this->config['type'] = 'Date';
                             break;
                         default:
-                            $this->type = 'Text';
+                            $this->config['type'] = 'Text';
                     }
                 } else {
-                    $this->type = 'Text';
+                    $this->config['type'] = 'Text';
                 }
                 break;
             case 'select':
-                $this->type = 'Text';
+            case 'inline':
+            case 'group':
+                if ($tcaColumn['config']['foreign_table'] === 'sys_file_reference') {
+                    $this->config['type'] = 'File';
+                } else {
+                    $this->config['type'] = 'Text';
+                }
                 break;
             default:
-                $this->type = 'Text';
+                $this->config['type'] = 'Text';
                 break;
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param string $type
-     */
-    public function setType(string $type)
-    {
-        $this->type = $type;
     }
 
     /**
@@ -97,7 +88,7 @@ class FieldResolution
      */
     public function getValue(): string
     {
-        return $this->value;
+        return (string)$this->value;
     }
 
     /**
@@ -111,16 +102,16 @@ class FieldResolution
     /**
      * @return array
      */
-    public function getConfiguration(): array
+    public function getConfig(): array
     {
-        return $this->configuration;
+        return $this->config;
     }
 
     /**
-     * @param array $configuration
+     * @param array $config
      */
-    public function setConfiguration(array $configuration)
+    public function setConfig(array $config)
     {
-        $this->configuration = $configuration;
+        $this->config = $config;
     }
 }
