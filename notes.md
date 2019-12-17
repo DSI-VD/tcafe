@@ -1,37 +1,77 @@
 
 targets for fluid
-  data full  tcafe.data.tables.[table].fields.[field].value
-  data short tcafe.data.[table].[field]
-ou
-  data full  tcafe.tables.[table].data.fields.[field].value
-  data short tcafe.[table].data.[field]
-
-  tcafe.tables.{table}.conf.fields.{field}.type
-
-
-1 array, conf and data mixed
+---------------------
+1 array : conf and data mixed
   for each rows as $table => $row
     for each $row as $field => $fv
-      print = field.configuration.label + fv.value
-      label = field.configuration.label
-      type  = field.configuration.type
+      print = field.conf.label + fv.value
+      label = field.conf.label
+      type  = field.conf.type
 
 2 arrays :
   tcafe.data and tcafe.conf
   type = tcafe.conf.tables.{table}.fields.{field}.type
 
 
-Aware access ASSOC key->value  check MYSQLI_ASSOC for TYPO3 SQL ?
-  for each tcafe.data.tables.fe_users as fe_user
-    print = User name + fe_user.username
-    print = tcafe.conf.tables.{table}.fields.{field}.label + fe_user.username
-    type = tcafe.conf.tables.{table}.fields.{field}.type
+# tcafe.tables."fe_users".data.[n].[field] = mixed:value
+# tcafe.tables."fe_users".conf.columns."username" = array:conf
 
-    for each fe_user as field
-      print = tcafe.conf.tables.{table}.fields.{field}.label + field
+Aware access ASSOC key->value 
+  for each tcafe.tables.fe_users.data as fe_user
+    print = User name + fe_user.username
+    print = tcafe.tables."fe_users".conf.columns."username".label + fe_user.username
+
+      for each fe_user as field
+          print = tcafe.tables.{table}.conf.columns.{field}.label + ": " + field
 
 Generic access
-  for each tcafe.data.tables as table => $row
-    for each table(=rows) as $field => $fv
-      print = tcafe.conf.tables.{$table}.fields.{$field}.label + $fv
-      type  = tcafe.conf.tables.{$table}.fields.{$field}.type
+  for each tcafe.tables as tk => $tv
+    for each tcafe.tables.{tk}.data as row
+        for each row as $field => $fv
+          print = tk.conf.columns.{$field}.label + ": " + $fv
+          type  = tk.conf.columns.{$field}.type
+
+
+Pagination
+-----------
+Pagination managed in query or fluid or javascript
+
+Sort
+---------------
+Sort managed in in query or fluid or javascript 
+
+Filter
+--------------
+Filter managed in query or fluid or javascript
+
+
+
+Install
+-----------
+lib.content {
+    render = CONTENT
+    render {
+        table = tt_content
+        select {
+            orderBy = sorting
+            where.cObject = COA
+            where.cObject {
+                10 = TEXT
+                10 {
+                    field = colPos
+                    intval = 1
+                    ifEmpty = 0
+                    noTrimWrap = | AND colPos=||
+                }
+            }
+        }
+    }
+}
+
+page = PAGE
+page.10 = FLUIDTEMPLATE
+page.10 {
+   template = FILE
+   template.file = fileadmin/template.html
+}
+

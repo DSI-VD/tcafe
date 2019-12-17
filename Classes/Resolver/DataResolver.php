@@ -42,7 +42,7 @@ class DataResolver
 
         $data = [];
         $rows = $statement->fetchAll();
-        DebuggerUtility::var_dump($rows);
+
         foreach ($rows as $key => $row) {
             foreach ($row as $field => $value)
             $data[$key][] = new FieldResolution(

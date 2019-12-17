@@ -1,0 +1,67 @@
+
+# doc https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html
+# test online https://yaml-online-parser.appspot.com/
+
+tableName: fe_users
+name: Users # default table name
+label: The users # default TCA
+
+actions:
+  list:
+    # default ../Table.name/Action.html
+    templatePath: 'EXT:toto/Resources/Private/Templates/Users/List.html'
+    pid: 123456
+    default:
+      sort:
+        by: username # see TCA
+        direction: ASC
+
+    filters: # OR FLUID ??
+      activ:
+        fields:
+          - input:
+              label: Rechercher
+              searchInfields:
+                - username:
+
+                    condition: and # and/or default or
+                - first_name:
+
+          - select:
+              facetedMode: 1
+              searchInfield: username
+          - radio:
+              facetedMode: 1
+              searchInfield: username
+          - checkBox:
+              facetedMode: 1
+              searchInfield: username
+
+    pagination: # default TCA # OR FLUID ??
+      activ: 0 # default 1
+
+    infos: # OR FLUID ??
+      activ: 0 # default 1
+      label: Informations
+
+    columns:
+      first_name:
+        label: tcafe-label
+        config:
+          max: 200
+      last_name:
+        label: Name
+        crop: "2"
+
+      username:
+        label: Username
+      usergroup:
+        label: Groups
+  #    sexe:
+  #      label: Sexe
+  #      options:
+  #        0: Feminin
+  #        1: Masculin
+  detail:
+    pid: 123
+    tcaType: fe

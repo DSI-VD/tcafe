@@ -4,13 +4,15 @@
 
 ---
 table:
-  fe_users:
+  table:
     name: Users # default table name
     label: The users # default TCA
     query: # default TCA
       and: pid=2
 
-    actions :
+
+
+
       list:
         # default ../Table.name/Action.html
         templatePath: 'EXT:toto/Resources/Private/Templates/Users/List.html'
@@ -21,16 +23,16 @@ table:
             direction: ASC
 
         filters: # OR FLUID ??
-          activ: 0
+          activ:
             fields:
               - input:
                   label: Rechercher
                   searchInfields:
                     - username:
-                        rules: *
+
                         condition: and # and/or default or
                     - first_name:
-                        rules: *
+
               - select:
                   facetedMode: 1
                   searchInfield: username
@@ -49,17 +51,17 @@ table:
           label: Informations
 
         fields:
-          - first_name:
-              label: Test
-          - last_name:
-              label: Name
-              crop:
-                maxCharacters: 2
+          first_name:
+            label: Test
+          last_name:
+            label: Name
+            crop:
+              maxCharacters: 2
 
-          - username:
-              label: Username
-          - usergroup:
-              label: Groups
+          username:
+            label: Username
+          usergroup:
+            label: Groups
       #    sexe:
       #      label: Sexe
       #      options:
