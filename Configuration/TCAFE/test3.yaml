@@ -1,0 +1,44 @@
+# non lisible dans le BE
+table: fe_users
+list:
+  fluidVariableName: users
+  templateName: 'EXT:vd_base/Resources/Private/Templates/UserList.html'
+  fields:
+    first_name:
+      label: Test
+    last_name:
+      crop:
+        maxCharacters: 2
+    username:
+      label: Username
+    image:
+      label: Image de profile
+    uid:
+      label: Le numéro du client
+    crdate:
+      label: Date du dernier login
+      format: '%d %B %Y'
+    radio_1:
+      label: Radio test
+    disable:
+      label: Désactivé
+      values:
+        1: 'oui'
+        0: 'non'
+    select_single_3:
+      label: Select single
+    usergroup:
+      label: Groups
+      fields:
+        crdate:
+          label: Date de création
+        title:
+          label: Nom du groupe
+#    sexe:
+#      label: Sexe
+#      options:
+#        0: Feminin
+#        1: Masculin
+detail:
+  pid: 123
+  tcaType: fe

@@ -112,10 +112,18 @@ lib.content {
 }
 
 page = PAGE
-page.10 = FLUIDTEMPLATE
-page.10 {
-   template = FILE
-   template.file = fileadmin/template.html
+page {
+    includeCSS {
+        bootstrap = https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css
+        bootstrap.external = 1
+        bootstrap.integrity = sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh
+        bootstrap.crossorigin = anonymous
+    }
+    10 = FLUIDTEMPLATE
+    10 {
+       template = FILE
+       template.file = fileadmin/template.html
+    }
 }
 
 <h1>hello</h1>

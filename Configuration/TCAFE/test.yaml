@@ -1,7 +1,36 @@
 # non lisible dans le BE
 table: fe_users
+storagePid: 7
 list:
-  templateName: 'EXT:vd_base/Resources/Private/Templates/UserList.html'
+#  fluidVariableName: users
+#  templateName: 'EXT:vd_base/Resources/Private/Templates/UserList.html'
+  additionnalWhereClause: ''
+  filters:
+    inputSearch:
+      type: Input
+      fields: 'first_name,last_name,username'
+      label: Rechercher
+      placeholder: Rechercher
+    checkboxSexe:
+      type: Checkbox
+      field: sexe
+      items:
+        0: Masculin
+        1: Feminin
+    selectGroup:
+      type: Select
+      field: usergroup
+      foreignFields: first_name, last_name
+      excludeNonUsedValues: true
+      displayCount: true
+      whereClause: 'pid=7'
+      multi: true
+    selectSingle3:
+      type: Select
+      field: select_single_3
+      items:
+        1: Toto
+        2: Tata
   fields:
     first_name:
       label: Test
@@ -14,6 +43,18 @@ list:
       label: Image de profile
     uid:
       label: Le numéro du client
+    crdate:
+      label: Date du dernier login
+      format: '%d %B %Y'
+    radio_1:
+      label: Radio test
+    disable:
+      label: Désactivé
+      values:
+        1: 'oui'
+        0: 'non'
+    select_single_3:
+      label: Select single
     usergroup:
       label: Groups
       fields:
@@ -21,11 +62,5 @@ list:
           label: Date de création
         title:
           label: Nom du groupe
-#    sexe:
-#      label: Sexe
-#      options:
-#        0: Feminin
-#        1: Masculin
 detail:
   pid: 123
-  tcaType: fe

@@ -4,21 +4,25 @@ namespace Vd\Tcafe\Validator;
 class ConfigurationValidator
 {
     const IGNORE_FIELDS = [
-        'uid',
-        'pid',
-        't3ver_id',
-        't3ver_oid',
-        't3ver_wsid',
-        't3ver_label',
-        't3ver_state',
-        't3ver_count',
-        't3ver_stage',
-        't3ver_tstamp',
-        'perms_userid',
-        'perms_groupid',
-        'perms_user',
-        'perms_group',
-        'perms_everybody'
+        'uid' => ['type' => 'Text'],
+        'pid' => ['type' => 'Text'],
+        't3ver_id' => ['type' => 'Text'],
+        't3ver_oid' => ['type' => 'Text'],
+        't3ver_wsid' => ['type' => 'Text'],
+        't3ver_label' => ['type' => 'Text'],
+        't3ver_state' => ['type' => 'Text'],
+        't3ver_count' => ['type' => 'Text'],
+        't3ver_stage' => ['type' => 'Text'],
+        't3ver_tstamp' => ['type' => 'Date'],
+        'perms_userid' => ['type' => 'Text'],
+        'perms_groupid' => ['type' => 'Text'],
+        'perms_user' => ['type' => 'Text'],
+        'perms_group' => ['type' => 'Text'],
+        'perms_everybody' => ['type' => 'Text'],
+        'tstamp' => ['type' => 'Date'],
+        'crdate' => ['type' => 'Date'],
+        'cruser_id' => ['type' => 'Text'],
+        'delete' => ['type' => 'Text']
     ];
 
     /**
@@ -33,8 +37,9 @@ class ConfigurationValidator
             throw new UnexistingTableException('The table ' . $configuration['table'] . ' does not exist.');
         }
         foreach ($configuration[$action]['fields'] as $key => $field) {
-            if (!in_array($key,
-                    self::IGNORE_FIELDS) && !isset($GLOBALS['TCA'][$configuration['table']]['columns'][$key])) {
+            if (!array_key_exists($key, self::IGNORE_FIELDS) &&
+                !isset($GLOBALS['TCA'][$configuration['table']]['columns'][$key])
+            ) {
                 throw new UnexistingColumnException('The column ' . $key . ' set in the configuration file does not exist.');
             }
         }

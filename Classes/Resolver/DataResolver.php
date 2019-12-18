@@ -31,27 +31,20 @@ class DataResolver
 
         $data = [];
         $rows = $statement->fetchAll();
-        foreach ($rows as $key => $row) {
-            foreach ($row as $field => $value) {
 
-                // Set visible to true for fields that are missing a key with visible value
-                $fieldConf = $configuration[$action]['fields'][$field];
-                if(is_array($fieldConf) && !array_key_exists('visible', $fieldConf)) {
-                    $configuration[$action]['fields'][$field]['visible'] = true;
+        if (!isset($configuration[$action]['fluidVariableName'])) {
+            foreach ($rows as $key => $row) {
+                foreach ($row as $field => $value) {
+                    $data[$key][$field] = new FieldResolution(
+                        $field,
+                        $value,
+                        $configuration[$action]['fields'][$field] ?? [],
+                        $GLOBALS['TCA'][$configuration['table']]['columns'][$field] ?? []
+                    );
                 }
-
-                if (in_array($field,
-                        ConfigurationValidator::IGNORE_FIELDS) && $configuration[$action]['fields'][$field]) {
-                    $configuration[$action]['fields'][$field]['visible'] = false;
-                }
-
-                $data[$key][$field] = new FieldResolution(
-                    $field,
-                    $value,
-                    $configuration[$action]['fields'][$field] ?? [],
-                    $GLOBALS['TCA'][$configuration['table']]['columns'][$field] ?? []
-                );
             }
+        } else {
+            $data = $rows;
         }
 
         return $data;

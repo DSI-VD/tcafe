@@ -11,9 +11,8 @@
                         <TCEforms>
                             <label>Configuration file path</label>
                             <config>
-                                <default></default>
                                 <type>input</type>
-                                <size>15</size>
+                                <size>50</size>
                             </config>
                         </TCEforms>
                     </settings.configurationFilePath>
@@ -31,6 +30,10 @@
                                     <numIndex index="2">
                                         <numIndex index="0">List</numIndex>
                                         <numIndex index="1">Tcafe->list</numIndex>
+                                    </numIndex>
+                                    <numIndex index="3">
+                                        <numIndex index="0">Filter</numIndex>
+                                        <numIndex index="1">Tcafe->filter;Tcafe->list</numIndex>
                                     </numIndex>
                                 </items>
                             </config>

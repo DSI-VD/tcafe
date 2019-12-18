@@ -1,0 +1,6 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:if condition="{field.config.format}">
+    <f:then><f:format.date format="{field.config.format}" date="{field.value}"/></f:then>
+    <f:else><f:format.date format="{settings.defaultDateFormat}" date="{field.value}"/></f:else>
+</f:if>
+</html>
