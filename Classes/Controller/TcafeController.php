@@ -6,6 +6,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use Vd\Tcafe\Resolver\DataResolver;
 use Vd\Tcafe\Validator\ConfigurationValidator;
+use Vd\Tcafe\Validator\FileErrorConfigurationException;
 
 class TcafeController extends ActionController
 {
@@ -29,6 +30,18 @@ class TcafeController extends ActionController
      */
     public function initializeAction()
     {
+        if($this->settings['configurationFilePath']) {
+            $filePath = trim(GeneralUtility::getFileAbsFileName($this->settings['configurationFilePath']));
+            if (!file_exists($filePath)) {
+                throw new FileErrorConfigurationException('File does not exist');
+            }
+            if (!is_readable($filePath)) {
+                throw new FileErrorConfigurationException('File is not readable');
+            }
+        } else {
+            throw new FileErrorConfigurationException('ConfigurationFilePath directive is missing in your configuration');
+        }
+
         $fileLoader = GeneralUtility::makeInstance(YamlFileLoader::class);
         $this->configuration = $fileLoader->load($this->settings['configurationFilePath']);
         $action = $this->request->getControllerActionName();
