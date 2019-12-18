@@ -45,6 +45,49 @@ Filter
 Filter managed in query or fluid or javascript
 
 
+Relations
+------------
+
+check
+  items
+  renderType
+    checkboxToggle
+    checkboxLabeledToggle
+    
+flex    
+  \TYPO3\CMS\Core\Utility\GeneralUtility::xml2array().
+
+group
+  internal_type : 
+    db
+    file
+    file_reference
+  
+  API : TYPO3\CMS\Core\Database\RelationHandler
+
+
+imageManipulation
+
+inline
+  API ?
+
+TYPES
+---
+direct
+static
+csv
+  T1 csv T2
+1n
+  T1 (count) | (parent_uid, table) T2 
+1nn1
+  T1 (count) | uid_local T1T2 uid_foreign |  T2
+MM
+  T1 (count) | uid_local tables_local T1T2 tables_foreign uid_foreign |  T2
+MM
+  T1 (count) | uid_local tables_local more_local_fields T1T2 more_forein_fields tables_foreign uid_foreign |  T2
+
+
+
 
 Install
 -----------
