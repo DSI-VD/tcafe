@@ -31,10 +31,15 @@ class DataResolver
 
         $data = [];
         $rows = $statement->fetchAll();
-
         foreach ($rows as $key => $row) {
             foreach ($row as $field => $value) {
-                $configuration[$action]['fields'][$field]['visible'] ?: true;
+
+                // Set visible to true for fields that are missing a key with visible value
+                $fieldConf = $configuration[$action]['fields'][$field];
+                if(is_array($fieldConf) && !array_key_exists('visible', $fieldConf)) {
+                    $configuration[$action]['fields'][$field]['visible'] = true;
+                }
+
                 if (in_array($field,
                         ConfigurationValidator::IGNORE_FIELDS) && $configuration[$action]['fields'][$field]) {
                     $configuration[$action]['fields'][$field]['visible'] = false;
