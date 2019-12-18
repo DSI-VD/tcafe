@@ -32,26 +32,21 @@ class DataResolver
         $data = [];
         $rows = $statement->fetchAll();
 
-        if (!isset($configuration[$action]['fluidVariableName'])) {
-            foreach ($rows as $key => $row) {
-                foreach ($row as $field => $value) {
-                    $configuration[$action]['fields'][$field]['visible'] = true;
-                    // @todo bug uid???
-                    if (in_array($field,
-                            ConfigurationValidator::IGNORE_FIELDS) && $configuration[$action]['fields'][$field]) {
-                        $configuration[$action]['fields'][$field]['visible'] = false;
-                    }
-
-                    $data[$key][$field] = new FieldResolution(
-                        $field,
-                        $value,
-                        $configuration[$action]['fields'][$field] ?? [],
-                        $GLOBALS['TCA'][$configuration['table']]['columns'][$field] ?? []
-                    );
+        foreach ($rows as $key => $row) {
+            foreach ($row as $field => $value) {
+                $configuration[$action]['fields'][$field]['visible'] ?: true;
+                if (in_array($field,
+                        ConfigurationValidator::IGNORE_FIELDS) && $configuration[$action]['fields'][$field]) {
+                    $configuration[$action]['fields'][$field]['visible'] = false;
                 }
+
+                $data[$key][$field] = new FieldResolution(
+                    $field,
+                    $value,
+                    $configuration[$action]['fields'][$field] ?? [],
+                    $GLOBALS['TCA'][$configuration['table']]['columns'][$field] ?? []
+                );
             }
-        } else {
-            $data = $rows;
         }
 
         return $data;
