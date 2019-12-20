@@ -46,15 +46,11 @@ list:
     crdate:
       label: Date du dernier login
       format: '%d %B %Y'
-    radio_1:
-      label: Radio test
     disable:
       label: Désactivé
       values:
         1: 'oui'
         0: 'non'
-    select_single_3:
-      label: Select single
     usergroup:
       label: Groups
       fields:

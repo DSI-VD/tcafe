@@ -98,6 +98,10 @@ class FieldResolution
                 break;
         }
 
+
+
+
+
         // Add default types
         if (array_key_exists($this->name, ConfigurationValidator::IGNORE_FIELDS)) {
             ArrayUtility::mergeRecursiveWithOverrule($this->config, ConfigurationValidator::IGNORE_FIELDS[$this->name]);

@@ -1,3 +1,9 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:tcafe="http://typo3.org/ns/Vd/Tcafe/ViewHelpers" data-namespace-typo3-fluid="true">
-{field.value}
+<tcafe:resolveRelation uidLocal="{row.uid.value}" table="{configuration.table}" field="{field}">
+    <f:for each="{records}" as="record">
+        <f:for each="{record}" as="field">
+            <f:render partial="Types/{field.config.type}" arguments="{field: field, configuration: configuration, row: record, settings: settings}"/>
+        </f:for><br>
+    </f:for>
+</tcafe:resolveRelation>
 </html>
