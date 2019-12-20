@@ -1,0 +1,24 @@
+# non lisible dans le BE
+table: tx_news_domain_model_news
+storagePid: 7
+list:
+#  fluidVariableName: users
+#  templateName: 'EXT:vd_base/Resources/Private/Templates/UserList.html'
+  additionnalWhereClause: ''
+
+  fields:
+    title:
+
+    pid:
+      label: Mon pid
+
+    tags:
+      label: tag
+      fields:
+        title:
+          label: tag title label
+        notes:
+        seo_text:
+        seo_description:
+detail:
+  pid: 123

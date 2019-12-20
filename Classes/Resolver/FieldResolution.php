@@ -52,6 +52,7 @@ class FieldResolution
 
         // Set the type
         switch ($tcaColumn['config']['type']) {
+            case 'text':
             case 'input':
                 if (isset($tcaColumn['config']['renderType'])) {
                     switch ($tcaColumn['config']['renderType']) {
