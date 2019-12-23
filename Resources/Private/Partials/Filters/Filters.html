@@ -1,26 +1,55 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-      xmlns:n="http://typo3.org/ns/GeorgRinger/News/ViewHelpers"
       data-namespace-typo3-fluid="true">
 
-<!-- build a filter block <f:render partial="Filters" arguments="{name:filter, label:Filter, filters:filters}" /> -->
-
-<f:section name="filter">
-
-    <f:if filters.size>
-        <form>
-            <f:for each="{filters}" as="filter">
-
-                {filter.type}
-                <f:if condition="{filter.type}">
-                    <f:render section="Partials/Filters/Input" arguments="{}" />
-                </f:if>
-
-            </f:for>
-        </form>
+    <f:if condition="{filter}">
+        <then>
+            <div name="tcafe_filter_{dyn}">
+                <f:form object="{search}" name="search" pageUid="{settings.listPid}">
+                    <f:for each="{filter.fieldsets}" as="fieldset">
+                        <f:if condition="{fieldset}">
+                            <f:then>
+                                <fieldset>
+                                    <legend>{fieldset.legend}</legend>
+                                    <f:for each="{fieldset.fields}" as="field">
+                                            <f:if condition="{field.type}">
+                                                <f:render section="form-{field.type}" arguments="{field:field}" />
+                                            </f:if>
+                                    </f:for>
+                                </fieldset>
+                            </f:then>
+                            <f:else>
+                            </f:else>
+                        </f:if>
+                    </f:for>
+                </f:form>
+            </div>
+        </then>
+        <else>
+            <div name="tcafe_msg_{dyn}">
+                <f:translate key="tcafe_filter_none" />
+            </div>
+        </else>
     </f:if>
+</html>
+
+
+<f:section name="form-input" >
+    <div>
+        <label for="tcafe-filter-{dyn}">{field.label}</label>
+        <f:form.textfield id="tcafe-filter-{dyn}" property="tcafe-filter-{dyn}" />
+    </div>
+</f:section>
+
+<f:section name="form-select" >
+    <f:debug title="form-select">{rows}</f:debug>
+    <f:variable name="options">
+        <f:render partial="Types/{field.config.type}" arguments="{field: field, configuration: configuration, row: row, settings: settings}"/>
+    </f:variable>
+    <div>
+        <label for="tcafe-filter-{dyn}">{field.label}</label>
+        <f:form.select id="tcafe-filter-{dyn}" options="{options}" optionValueField="id" optionLabelField="{field.label}" />
+    </div>
 
 </f:section>
 
-<f:render section="filter" arguments="{filters: filters}" />
 
-</html>

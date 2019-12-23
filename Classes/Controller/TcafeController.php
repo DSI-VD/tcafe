@@ -4,8 +4,10 @@ namespace Vd\Tcafe\Controller;
 use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use Vd\Tcafe\Resolver\DataResolver;
+use Vd\Tcafe\Resolver\FilterResolver;
 use Vd\Tcafe\Validator\ConfigurationValidator;
 use Vd\Tcafe\Validator\FileErrorConfigurationException;
 
@@ -20,6 +22,10 @@ class TcafeController extends ActionController
      * @var DataResolver
      */
     private $dataResolver = null;
+    /**
+     * @var FilterResolver
+     */
+    private $filterResolver = null;
 
     /**
      * @var string
@@ -59,6 +65,7 @@ class TcafeController extends ActionController
             $this->configuration,
             $this->request->getControllerActionName()
         );
+
         $this->setTemplate();
         $this->view->assignMultiple([
             $this->fluidVariableName => $records,
@@ -69,16 +76,22 @@ class TcafeController extends ActionController
     /**
      * @param array $filterValues
      */
-    public function filterAction(array $filterValues)
+    public function filterAction(array $filterValues = [])
     {
-        $records = $this->dataResolver->resolve(
+        $this->filterResolver = GeneralUtility::makeInstance(FilterResolver::class);
+
+        $records = $this->filterResolver->resolve(
             $this->configuration,
-            $this->request->getControllerActionName()
+            'filter'
         );
+
+
         $this->setTemplate();
         $this->view->assignMultiple([
             $this->fluidVariableName => $records,
-            'configuration' => $this->configuration
+            'configuration' => $this->configuration,
+            'records' => $records,
+
         ]);
     }
 

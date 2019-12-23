@@ -1,24 +1,45 @@
 # non lisible dans le BE
 table: tx_news_domain_model_news
 storagePid: 7
+
+
+
+filter:
+  legend: formulaire
+  fieldsets:
+    address:
+      legend: addresse
+      fields:
+        inputSearch:
+          type: input
+          label: Rechercher
+          placeholder: Rechercher
+          fields: 'title'
+    more:
+      legend: addresse
+      fields:
+        tags:
+          type: select
+          label: Tags
+          fields: title
+
 list:
 #  fluidVariableName: users
 #  templateName: 'EXT:vd_base/Resources/Private/Templates/UserList.html'
   additionnalWhereClause: ''
 
+
+
   fields:
     title:
-
     pid:
       label: Mon pid
-
     tags:
-      label: tag
+      label: tags
       fields:
         title:
-          label: tag title label
-        notes:
-        seo_text:
-        seo_description:
+        slug:
+        seo_title:
+
 detail:
   pid: 123

@@ -3,13 +3,17 @@ namespace Vd\Tcafe\Resolver;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Database\ReferenceIndex;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use Vd\Tcafe\Validator\ConfigurationValidator;
+use Vd\Tcafe\Resolver\FieldResolution;
 
 class DataResolver
 {
     /**
+     * Resolve tcafe.table.actions with clauses
      * @param array $configuration
      * @param string $action
      * @param string $clauses
@@ -19,15 +23,12 @@ class DataResolver
     {
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($configuration['table']);
-
         foreach ($configuration[$action]['fields'] as $key => $field) {
             $queryBuilder->addSelect($key);
         }
-
         if (!empty($clauses)) {
             $queryBuilder->where($clauses);
         }
-
         $queryBuilder->addSelect('uid');
         $queryBuilder->addSelect('pid');
 
@@ -37,7 +38,6 @@ class DataResolver
 
         $data = [];
         $rows = $statement->fetchAll();
-
         if (!isset($configuration[$action]['fluidVariableName'])) {
             foreach ($rows as $key => $row) {
                 foreach ($row as $field => $value) {
@@ -45,14 +45,75 @@ class DataResolver
                         $field,
                         $value,
                         $configuration[$action]['fields'][$field] ?? [],
-                        $GLOBALS['TCA'][$configuration['table']]['columns'][$field] ?? []
+                        $GLOBALS['TCA'][$configuration['table']]['columns'][$field] ?? [],
+                        $configuration['table']
                     );
                 }
             }
         } else {
             $data = $rows;
         }
-
         return $data;
     }
+
+    /** get Foreign relations for FieldResolution
+     * @param string $localTable
+     * @param FieldResolution $field
+     * @param string $clauses
+     * @param int $localUid
+     * @return FieldResolution[]
+     */
+    public function resolveFields(string $localTable, FieldResolution $field, string $clauses = '', int $localUid=null): array
+    {
+
+        $tableLocal = $field->getTableLocal?$field->getTableLocal:$localTable;
+
+        // case select and group relation
+        $referenceIndex = GeneralUtility::makeInstance(ReferenceIndex::class);
+        $relationsRecords = $referenceIndex->getRelations($tableLocal, ['uid'=>$localUid,$field->getName()=>$field->getValue()]);
+
+        // other case
+
+
+        // use $relationsRecords
+        $data = [];
+        foreach ($field->getConfig()['fields'] as $key => $v) {
+            $selectFields[] = $key;
+        }
+        foreach ($relationsRecords[$field->getName()]['itemArray'] as $relation ){ // uid tablename
+            /** @var QueryBuilder $queryBuilder */
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($relation['table']);
+            foreach ($selectFields as $k=>$v){
+                $queryBuilder->addSelect($v);
+            }
+            if (!empty($clauses)) {
+                $queryBuilder->where($clauses);
+            }
+            $queryBuilder->addSelect('uid');
+            $queryBuilder->addSelect('pid');
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->eq('uid',$relation['id'])
+            );
+            $statement = $queryBuilder
+                ->from($relation['table'])
+                ->execute();
+            $rows = $statement->fetchAll();
+            $rows[0]['_table_'] = $relation['table'];
+            $rowsFinal[] = $rows[0];
+
+        }
+        foreach ($rowsFinal as $key => $row) {
+            foreach ($row as $fieldK => $value) {
+                $data[$key][$fieldK] = new FieldResolution(
+                    $fieldK,
+                    $value,
+                    $fieldsConfig[$fieldK] ?? [],
+                    $GLOBALS['TCA'][ $table = $row['_table_'] ]['columns'][$fieldK] ?? [],
+                    $row['_table_']
+                );
+            }
+        }
+        return $data;
+    }
+
 }

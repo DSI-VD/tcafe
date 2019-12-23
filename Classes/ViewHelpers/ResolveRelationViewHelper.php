@@ -4,6 +4,7 @@ namespace Vd\Tcafe\ViewHelpers;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Resource\FileRepository;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -33,23 +34,26 @@ class ResolveRelationViewHelper extends AbstractViewHelper
         RenderingContextInterface $renderingContext
     ) {
         $variableProvider = $renderingContext->getVariableProvider();
+
         /** @var FieldResolution $field */
         $field = $arguments['field'];
-        $foreignTable = $GLOBALS['TCA'][$arguments['table']]['columns'][$field->getName()]['config']['foreign_table'];
+        // $foreignTable = $GLOBALS['TCA'][$arguments['table']]['columns'][$field->getName()]['config']['foreign_table'];
 
-        $config = [
-            'table' => $foreignTable,
-            'list' => [
-                'fields' => $field->getConfig()['fields']
-            ]
-        ];
 
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($arguments['table']);
         /** @var DataResolver $dataResolver */
         $dataResolver = GeneralUtility::makeInstance(DataResolver::class);
-        $rows = $dataResolver->resolve($config, 'list', $queryBuilder->expr()->in('uid', $field->getValue()));
+        //$rows = $dataResolver->resolve($config, 'list', $queryBuilder->expr()->in('uid', $field->getValue()));
+        $rows = $dataResolver->resolveFields(
+            $arguments['table'],
+            $arguments['field'],
+            '',
+            $arguments['uidLocal']
+        );
 
+
+        // inject to fluid
         $variableProvider->add('records', $rows);
         $content = $renderChildrenClosure();
         $variableProvider->remove('records');

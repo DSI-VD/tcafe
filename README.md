@@ -8,7 +8,7 @@ This extension try just do the same for the frontend.
 
 ### Components ###
 - Data
-- Filters
+- Filter
 - Infos
 - Pagination
 - List view

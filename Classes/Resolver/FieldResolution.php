@@ -23,12 +23,14 @@ class FieldResolution
     protected $config = [];
 
     /**
+     * map field type for fluid with values
      * @param string $name
      * @param string $value
      * @param array $config
      * @param array $tcaColumn
+     * @param string $tableLocal
      */
-    public function __construct($name, $value, array $config, array $tcaColumn)
+    public function __construct($name, $value, array $config, array $tcaColumn, string $tableLocal)
     {
         $this->name = $name;
         $this->value = $value;
@@ -49,6 +51,8 @@ class FieldResolution
         ) {
             $this->config['visible'] = false;
         }
+        // set current table
+        $this->config['tableLocal'] = $tableLocal;
 
         // Set the type
         switch ($tcaColumn['config']['type']) {
@@ -109,6 +113,7 @@ class FieldResolution
         }
     }
 
+
     /**
      * @return string
      */
@@ -156,6 +161,13 @@ class FieldResolution
     {
         $this->config = $config;
     }
+    /**
+     * @param string $tableLocal
+     */
+    public function getTableLocal(array $tableLocal)
+    {
+        $this->tableLocal = $tableLocal;
+    }
 
     /**
      * @param array $items
@@ -175,4 +187,6 @@ class FieldResolution
 
         return $cleanValues;
     }
+
+
 }
