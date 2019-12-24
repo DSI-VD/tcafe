@@ -23,7 +23,7 @@
             <f:for each="{row}" as="field" iteration="it">
                 <f:if condition="{field.config.visible}">
                     <td>
-                        <f:render partial="Types/{field.config.type}" arguments="{field: field, configuration: configuration, row: row, settings: settings}"/>
+                        <f:render partial="Types/{field.config.type}" arguments="{field: field, configuration: configuration, row: row, settings: settings, action:'list'}"/>
                     </td>
                 </f:if>
             </f:for>

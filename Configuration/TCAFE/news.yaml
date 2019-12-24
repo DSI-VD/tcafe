@@ -24,22 +24,27 @@ filter:
           fields: title
 
 list:
-#  fluidVariableName: users
-#  templateName: 'EXT:vd_base/Resources/Private/Templates/UserList.html'
+  #  fluidVariableName: users
+  templateName: 'EXT:vd_base/Resources/Private/Templates/UserList.html'
   additionnalWhereClause: ''
 
 
 
   fields:
     title:
+      crop:
+        maxCharacters: 50
     pid:
-      label: Mon pid
+      label: Dossier PID
+    fal_media:
+      label: illustration
     tags:
       label: tags
       fields:
         title:
         slug:
         seo_title:
+  linkedFields: [title,fal_media]
 
 detail:
-  pid: 123
+  pid: 12

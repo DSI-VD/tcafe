@@ -4,7 +4,6 @@ namespace Vd\Tcafe\Controller;
 use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use Vd\Tcafe\Resolver\DataResolver;
 use Vd\Tcafe\Resolver\FilterResolver;
@@ -51,6 +50,7 @@ class TcafeController extends ActionController
 
         $fileLoader = GeneralUtility::makeInstance(YamlFileLoader::class);
         $this->configuration = $fileLoader->load($this->settings['configurationFilePath']);
+
         $action = $this->request->getControllerActionName();
         ConfigurationValidator::validate($this->configuration, $action);
         $this->dataResolver = GeneralUtility::makeInstance(DataResolver::class);
@@ -73,6 +73,16 @@ class TcafeController extends ActionController
         ]);
     }
 
+    /**
+     * @param $id
+     */
+    public function showAction($id)
+    {
+        $this->view->assignMultiple([
+            'currentPid' => $GLOBALS['TSFE']->id,
+            'configuration' => $this->configuration
+        ]);
+    }
     /**
      * @param array $filterValues
      */

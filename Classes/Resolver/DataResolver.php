@@ -5,9 +5,7 @@ namespace Vd\Tcafe\Resolver;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\ReferenceIndex;
-use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use Vd\Tcafe\Validator\ConfigurationValidator;
 use Vd\Tcafe\Resolver\FieldResolution;
 
@@ -39,6 +37,7 @@ class DataResolver
 
         $data = [];
         $rows = $statement->fetchAll();
+
         if (!isset($configuration[$action]['fluidVariableName'])) {
             foreach ($rows as $key => $row) {
                 foreach ($row as $field => $value) {
@@ -47,7 +46,8 @@ class DataResolver
                         $value,
                         $configuration[$action]['fields'][$field] ?? [],
                         $GLOBALS['TCA'][$configuration['table']]['columns'][$field] ?? [],
-                        $configuration['table']
+                        $configuration['table'],
+                        $configuration[$action]['linkedFields']
                     );
                 }
             }
