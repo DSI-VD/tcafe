@@ -48,3 +48,7 @@ list:
 
 detail:
   pid: 12
+  fields:
+    title:
+    pid:
+    fal_media:
