@@ -2,7 +2,7 @@
 
 <f:if condition="({action} == 'list' && {field.config.linkedField})">
     <f:then>
-        <f:link.action action="show" pageUid="{configuration.detail.pid}">{f:if(condition: '{field.config.crop}', then: '{field.value -> f:format.crop(maxCharacters: field.config.crop.maxCharacters)}', else: '{field.value}' )}</f:link.action>
+        <f:link.action action="detail" arguments="{uid: 1}" pageUid="{configuration.detail.pid}">{f:if(condition: '{field.config.crop}', then: '{field.value -> f:format.crop(maxCharacters: field.config.crop.maxCharacters)}', else: '{field.value}' )}</f:link.action>
     </f:then>
     <f:else>
         {f:if(condition: '{field.config.crop}', then: '{field.value -> f:format.crop(maxCharacters: field.config.crop.maxCharacters)}', else: '{field.value}' )}

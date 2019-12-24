@@ -1,6 +1,8 @@
 <?php
 namespace Vd\Tcafe\Validator;
 
+use TYPO3\CMS\Core\Utility\DebugUtility;
+
 class ConfigurationValidator
 {
     const IGNORE_FIELDS = [
@@ -36,6 +38,7 @@ class ConfigurationValidator
         if (!isset($GLOBALS['TCA'][$configuration['table']])) {
             throw new UnexistingTableException('The table ' . $configuration['table'] . ' does not exist.');
         }
+
         foreach ($configuration[$action]['fields'] as $key => $field) {
             if (!array_key_exists($key, self::IGNORE_FIELDS) &&
                 !isset($GLOBALS['TCA'][$configuration['table']]['columns'][$key])

@@ -24,8 +24,8 @@
                                 <renderType>selectSingle</renderType>
                                 <items>
                                     <numIndex index="1">
-                                        <numIndex index="0">Show</numIndex>
-                                        <numIndex index="1">Tcafe->show</numIndex>
+                                        <numIndex index="0">Detail</numIndex>
+                                        <numIndex index="1">Tcafe->detail</numIndex>
                                     </numIndex>
                                     <numIndex index="2">
                                         <numIndex index="0">List</numIndex>

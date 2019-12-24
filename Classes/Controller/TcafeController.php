@@ -2,6 +2,7 @@
 namespace Vd\Tcafe\Controller;
 
 use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -74,14 +75,28 @@ class TcafeController extends ActionController
     }
 
     /**
-     * @param $id
+     * @param int $uid
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException
      */
-    public function showAction($id)
+    public function detailAction(int $uid)
     {
-        $this->view->assignMultiple([
-            'currentPid' => $GLOBALS['TSFE']->id,
-            'configuration' => $this->configuration
-        ]);
+
+        if($this->request->hasArgument('uid')) {
+
+            $whereClause = "uid=" . $this->request->getArgument('uid');
+            $records = $this->dataResolver->resolve(
+                $this->configuration,
+                $this->request->getControllerActionName(),
+                $whereClause
+            );
+
+            $this->view->assignMultiple([
+                'currentPid' => $GLOBALS['TSFE']->id,
+                $this->fluidVariableName => $records,
+                'configuration' => $this->configuration
+            ]);
+
+        }
     }
     /**
      * @param array $filterValues

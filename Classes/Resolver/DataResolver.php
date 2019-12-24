@@ -5,6 +5,7 @@ namespace Vd\Tcafe\Resolver;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\ReferenceIndex;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Vd\Tcafe\Validator\ConfigurationValidator;
 use Vd\Tcafe\Resolver\FieldResolution;
@@ -47,7 +48,7 @@ class DataResolver
                         $configuration[$action]['fields'][$field] ?? [],
                         $GLOBALS['TCA'][$configuration['table']]['columns'][$field] ?? [],
                         $configuration['table'],
-                        $configuration[$action]['linkedFields']
+                        $configuration[$action]['linkedFields'] ?? []
                     );
                 }
             }
