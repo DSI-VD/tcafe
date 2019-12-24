@@ -1,4 +1,5 @@
 <?php
+
 namespace Vd\Tcafe\Resolver;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -56,34 +57,43 @@ class DataResolver
         return $data;
     }
 
-    /** get Foreign relations for FieldResolution
+    /**
+     * Get Foreign relations for FieldResolution
      * @param string $localTable
      * @param FieldResolution $field
      * @param string $clauses
      * @param int $localUid
      * @return FieldResolution[]
      */
-    public function resolveFields(string $localTable, FieldResolution $field, string $clauses = '', int $localUid=null): array
-    {
+    public function resolveFields(
+        string $localTable,
+        FieldResolution $field,
+        string $clauses = '',
+        int $localUid = null
+    ): array {
 
-        $tableLocal = $field->getTableLocal?$field->getTableLocal:$localTable;
+        $tableLocal = $field->getTableLocal ?? $localTable;
 
         // case select and group relation
         $referenceIndex = GeneralUtility::makeInstance(ReferenceIndex::class);
-        $relationsRecords = $referenceIndex->getRelations($tableLocal, ['uid'=>$localUid,$field->getName()=>$field->getValue()]);
+        $relationsRecords = $referenceIndex->getRelations($tableLocal,
+            ['uid' => $localUid, $field->getName() => $field->getValue()]);
 
         // other case
 
 
         // use $relationsRecords
         $data = [];
+        $selectFields = [];
+        $relatedRows = [];
         foreach ($field->getConfig()['fields'] as $key => $v) {
             $selectFields[] = $key;
         }
-        foreach ($relationsRecords[$field->getName()]['itemArray'] as $relation ){ // uid tablename
+
+        foreach ($relationsRecords[$field->getName()]['itemArray'] as $relation) { // uid tablename
             /** @var QueryBuilder $queryBuilder */
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($relation['table']);
-            foreach ($selectFields as $k=>$v){
+            foreach ($selectFields as $k => $v) {
                 $queryBuilder->addSelect($v);
             }
             if (!empty($clauses)) {
@@ -92,25 +102,30 @@ class DataResolver
             $queryBuilder->addSelect('uid');
             $queryBuilder->addSelect('pid');
             $queryBuilder->andWhere(
-                $queryBuilder->expr()->eq('uid',$relation['id'])
+                $queryBuilder->expr()->eq('uid', $relation['id'])
             );
             $statement = $queryBuilder
                 ->from($relation['table'])
                 ->execute();
-            $rows = $statement->fetchAll();
-            $rows[0]['_table_'] = $relation['table'];
-            $rowsFinal[] = $rows[0];
 
+            $row = $statement->fetch();
+
+            // $newArr = array_map(function($item){ return $item['email'];}, $rows);
+            $row['_table_'] = $relation['table'];
+
+            $relatedRows[] = $row;
         }
-        foreach ($rowsFinal as $key => $row) {
+
+        foreach ($relatedRows as $key => $row) {
             foreach ($row as $fieldK => $value) {
                 $data[$key][$fieldK] = new FieldResolution(
                     $fieldK,
                     $value,
                     $fieldsConfig[$fieldK] ?? [],
-                    $GLOBALS['TCA'][ $table = $row['_table_'] ]['columns'][$fieldK] ?? [],
+                    $GLOBALS['TCA'][$table = $row['_table_']]['columns'][$fieldK] ?? [],
                     $row['_table_']
                 );
+                unset($data[$key]['_table_']);
             }
         }
         return $data;

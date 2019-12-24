@@ -35,13 +35,8 @@ class ResolveRelationViewHelper extends AbstractViewHelper
     ) {
         $variableProvider = $renderingContext->getVariableProvider();
 
-        /** @var FieldResolution $field */
-        $field = $arguments['field'];
         // $foreignTable = $GLOBALS['TCA'][$arguments['table']]['columns'][$field->getName()]['config']['foreign_table'];
 
-
-        /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($arguments['table']);
         /** @var DataResolver $dataResolver */
         $dataResolver = GeneralUtility::makeInstance(DataResolver::class);
         //$rows = $dataResolver->resolve($config, 'list', $queryBuilder->expr()->in('uid', $field->getValue()));
@@ -51,7 +46,6 @@ class ResolveRelationViewHelper extends AbstractViewHelper
             '',
             $arguments['uidLocal']
         );
-
 
         // inject to fluid
         $variableProvider->add('records', $rows);
