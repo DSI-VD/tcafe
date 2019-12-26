@@ -36,6 +36,29 @@ Pagination
 -----------
 Pagination managed in query or fluid or javascript
 
+
+1(BE solution)
+filterdTableOfUid[] : resolve a filterdTableOfUids for each filter
+tableOfUidsFiltered = merge of multi filterdTableOfUid with array_intersect() 
+tableOfUids = tableOfUidsFiltered : rename table of results
+tcafe:paginate (tableOfUids) : ask for array pagination
+result table = geTableWithFieldsFromTableOfUids() : return table with the fields
+
+
+// use TYPO3\CMS\Core\Pagination\ArrayPaginator;
+
+$itemsToBePaginated = ['apple', 'banana', 'strawberry', 'raspberry', 'ananas'];
+$itemsPerPage = 2;
+$currentPageNumber = 3;
+
+$paginator = new ArrayPaginator($itemsToBePaginated, $currentPageNumber, $itemsPerPage);
+$paginator->getNumberOfPages(); // returns 3
+$paginator->getCurrentPageNumber(); // returns 3, basically just returns the input value
+$paginator->getKeyOfFirstPaginatedItem(); // returns 5
+$paginator->getKeyOfLastPaginatedItem(); // returns 5
+
+
+
 Sort
 ---------------
 Sort managed in in query or fluid or javascript 
