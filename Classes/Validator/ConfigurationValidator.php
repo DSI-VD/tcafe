@@ -30,20 +30,21 @@ class ConfigurationValidator
     /**
      * @param array $configuration
      * @param string $action
-     * @throws UnexistingColumnException
-     * @throws UnexistingTableException
+     * @param array $settings
+     * @throws UnknownColumnException
+     * @throws UnknownTableException
      */
-    public static function validate(array $configuration, string $action)
+    public static function validate(array $configuration, string $action, array $settings)
     {
         if (!isset($GLOBALS['TCA'][$configuration['table']])) {
-            throw new UnexistingTableException('The table ' . $configuration['table'] . ' does not exist.');
+            throw new UnknownTableException('The table ' . $configuration['table'] . ' does not exist.');
         }
 
         foreach ($configuration[$action]['fields'] as $key => $field) {
             if (!array_key_exists($key, self::IGNORE_FIELDS) &&
                 !isset($GLOBALS['TCA'][$configuration['table']]['columns'][$key])
             ) {
-                throw new UnexistingColumnException('The column ' . $key . ' set in the configuration file does not exist.');
+                throw new UnknownColumnException('The column ' . $key . ' set in ' . $settings['configurationFilePath'] . ' does not exist.');
             }
         }
     }
