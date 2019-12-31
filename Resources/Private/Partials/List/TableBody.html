@@ -1,13 +1,13 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
 <f:for each="{rows}" as="row">
-    <ul class="list-disc">
+    <tr>
         <f:for each="{row}" as="field" iteration="it">
             <f:if condition="{field.config.visible}">
-                <li>
-                    <f:render partial="Types/{field.config.type}" arguments="{field: field, configuration: configuration, row: row, settings: settings, action: 'list'}"/>
-                </li>
+                <td>
+                    <f:render partial="Types/{field.config.type}" arguments="{field: field, configuration: configuration, row: row, settings: settings, action:'list'}"/>
+                </td>
             </f:if>
         </f:for>
-    </ul>
+    </tr>
 </f:for>
 </html>

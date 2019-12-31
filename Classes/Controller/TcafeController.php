@@ -61,7 +61,7 @@ class TcafeController extends ActionController
     {
         $records = $this->dataResolver->resolve(
             $this->configuration,
-            $this->request->getControllerActionName()
+            'list'
         );
 
         $this->setTemplate();
@@ -82,7 +82,7 @@ class TcafeController extends ActionController
         if ($this->request->hasArgument('uid')) {
             $records = $this->dataResolver->resolve(
                 $this->configuration,
-                $this->request->getControllerActionName(),
+                'detail',
                 'uid=' . $this->request->getArgument('uid')
             );
 
@@ -96,24 +96,25 @@ class TcafeController extends ActionController
     }
 
     /**
+     * The filter action.
+     *
      * @param array $filterValues
      */
     public function filterAction(array $filterValues = [])
     {
-        $this->filterResolver = GeneralUtility::makeInstance(FilterResolver::class);
-
-        $records = $this->filterResolver->resolve(
+        $this->filterResolver = GeneralUtility::makeInstance(FilterResolver::class, $this->configuration);
+        $filters = $this->filterResolver->build();
+        $records = $this->dataResolver->resolve(
             $this->configuration,
-            'filter'
+            'list',
+            $this->filterResolver->getClauses()
         );
-
 
         $this->setTemplate();
         $this->view->assignMultiple([
+            $this->fluidVariableName => $filters,
             $this->fluidVariableName => $records,
             'configuration' => $this->configuration,
-            'records' => $records,
-
         ]);
     }
 

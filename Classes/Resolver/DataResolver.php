@@ -1,5 +1,4 @@
 <?php
-
 namespace Vd\Tcafe\Resolver;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;

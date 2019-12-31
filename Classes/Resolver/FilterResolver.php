@@ -7,29 +7,31 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class FilterResolver
 {
+    protected $configuration = [];
+
     /**
+     * FilterResolver constructor.
+     *
      * @param array $configuration
-     * @param string $action
-     * @param string $clauses
+     */
+    public function __construct(array $configuration)
+    {
+        $this->configuration = $configuration;
+    }
+
+    /**
      * @return array
      */
-    public function resolve(array $configuration, string $action, string $clauses = ''): array
+    public function build(): array
     {
-        /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($configuration['table']);
-
-
-        foreach ($configuration[$action]['fieldsets'] as $fieldset => $filters) {
-            foreach ($filters as $key => $filter) {
-                foreach ($filter['fields'] as $field => $v) {
-
-                    $queryBuilder->addSelect($v);
-                }
-
-            }
-
-        }
-
         return [];
+    }
+
+    /**
+     * @return string
+     */
+    public function getClauses(): string
+    {
+        return '';
     }
 }
