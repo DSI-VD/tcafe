@@ -34,6 +34,10 @@ class TcafeController extends ActionController
 
     /**
      * Load and validate the configuration file.
+     *
+     * @throws FileErrorConfigurationException
+     * @throws \Vd\Tcafe\Validator\UnexistingColumnException
+     * @throws \Vd\Tcafe\Validator\UnexistingTableException
      */
     public function initializeAction()
     {
@@ -126,14 +130,16 @@ class TcafeController extends ActionController
     protected function setTemplate()
     {
         if (isset($this->configuration[$this->request->getControllerActionName()]['fluidVariableName'])) {
-            $this->fluidVariableName = $this->configuration[$this->request->getControllerActionName()]['fluidVariableName'];
+            $this->fluidVariableName = $this->configuration[$this->request->getControllerActionName()]['fluidVariableName'] ?? $this->fluidVariableName;
 
             if (isset($this->configuration[$this->request->getControllerActionName()]['templateName'])) {
+                $partialRootPaths = $this->view->getPartialRootPaths();
                 $this->view = $this->objectManager->get(StandaloneView::class);
                 $this->view->setFormat('html');
                 $this->view->setTemplatePathAndFilename(
                     GeneralUtility::getFileAbsFileName($this->configuration[$this->request->getControllerActionName()]['templateName'])
                 );
+                $this->view->setPartialRootPaths($partialRootPaths);
             }
         }
     }
