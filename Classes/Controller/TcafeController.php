@@ -102,19 +102,19 @@ class TcafeController extends ActionController
      */
     public function filterAction(array $filterValues = [])
     {
-        $this->filterResolver = GeneralUtility::makeInstance(FilterResolver::class, $this->configuration);
-        $filters = $this->filterResolver->build();
         $records = $this->dataResolver->resolve(
             $this->configuration,
             'list',
-            $this->filterResolver->getClauses()
+            '',
+            $filterValues
         );
 
         $this->setTemplate();
         $this->view->assignMultiple([
-            $this->fluidVariableName => $filters,
             $this->fluidVariableName => $records,
+            'filters' => $this->configuration['list']['filters'],
             'configuration' => $this->configuration,
+            'filterValues' => $filterValues,
         ]);
     }
 

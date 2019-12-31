@@ -2,11 +2,9 @@
 table: fe_users
 storagePid: 7
 list:
-  fluidVariableName: users
-#  templateName: 'EXT:vd_base/Resources/Private/Templates/UserList.html'
   additionnalWhereClause: ''
   showMoreLabel: En savoir plus
-
+  filterSubmitLabel: Rechercher
   filters:
     inputSearch:
       type: Input

@@ -43,8 +43,11 @@ class RelationViewHelper extends AbstractViewHelper
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($arguments['table']);
         $dataResolver = GeneralUtility::makeInstance(DataResolver::class);
-        $rows = $dataResolver->resolve($config, 'list',
-            $queryBuilder->expr()->in('uid', $arguments['foreignFieldValue']));
+        $rows = $dataResolver->resolve(
+            $config,
+            'list',
+            $queryBuilder->expr()->in('uid', $arguments['foreignFieldValue'])
+        );
 
         $variableProvider->add($arguments['as'], $rows);
         $content = $renderChildrenClosure();

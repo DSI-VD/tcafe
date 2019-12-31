@@ -13,18 +13,44 @@ class DataResolver
      * @param array $configuration
      * @param string $action
      * @param string $clauses
+     * @param array $filterValues
      * @return array
      */
-    public function resolve(array $configuration, string $action, string $clauses = ''): array
+    public function resolve(array $configuration, string $action, string $clauses = '', array $filterValues = []): array
     {
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($configuration['table']);
+
         foreach ($configuration[$action]['fields'] as $key => $field) {
             $queryBuilder->addSelect($key);
         }
+
         if (!empty($clauses)) {
             $queryBuilder->where($clauses);
         }
+
+        $filters = $configuration['list']['filters'];
+        $i = 0;
+        foreach ($filters as $filter) {
+            switch ($filter['type']) {
+                case 'Input':
+                    foreach (explode(',', $filter['fields']) as $field) {
+                        $queryBuilder->orWhere(
+                            $queryBuilder->expr()->like($field, $queryBuilder->quote('%' . $filterValues[$i] . '%'))
+                        );
+                    }
+                    break;
+                case 'Select':
+                    $queryBuilder->andWhere(
+                        $queryBuilder->expr()->like($filter['field'], $queryBuilder->quote('%' . $filterValues[$i] . '%'))
+                    );
+                    break;
+                default:
+                    break;
+            }
+            $i++;
+        }
+
         $queryBuilder->addSelect('uid');
         $queryBuilder->addSelect('pid');
 
