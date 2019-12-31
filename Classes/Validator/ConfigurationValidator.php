@@ -1,8 +1,6 @@
 <?php
 namespace Vd\Tcafe\Validator;
 
-use TYPO3\CMS\Core\Utility\DebugUtility;
-
 class ConfigurationValidator
 {
     const IGNORE_FIELDS = [

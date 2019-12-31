@@ -2,10 +2,7 @@
 namespace Vd\Tcafe\ViewHelpers;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
-use TYPO3\CMS\Core\Resource\FileRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
@@ -46,7 +43,8 @@ class RelationViewHelper extends AbstractViewHelper
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($arguments['table']);
         $dataResolver = GeneralUtility::makeInstance(DataResolver::class);
-        $rows = $dataResolver->resolve($config, 'list', $queryBuilder->expr()->in('uid', $arguments['foreignFieldValue']));
+        $rows = $dataResolver->resolve($config, 'list',
+            $queryBuilder->expr()->in('uid', $arguments['foreignFieldValue']));
 
         $variableProvider->add($arguments['as'], $rows);
         $content = $renderChildrenClosure();

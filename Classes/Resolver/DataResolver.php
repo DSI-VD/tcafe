@@ -5,10 +5,7 @@ namespace Vd\Tcafe\Resolver;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\ReferenceIndex;
-use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Vd\Tcafe\Validator\ConfigurationValidator;
-use Vd\Tcafe\Resolver\FieldResolution;
 
 class DataResolver
 {

@@ -3,7 +3,6 @@ namespace Vd\Tcafe\Controller;
 
 use Symfony\Component\Yaml\Exception\ParseException;
 use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
-use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Fluid\View\StandaloneView;
@@ -73,19 +72,18 @@ class TcafeController extends ActionController
     }
 
     /**
+     * The detail action.
+     *
      * @param int $uid
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException
      */
     public function detailAction(int $uid)
     {
-
-        if($this->request->hasArgument('uid')) {
-
-            $whereClause = "uid=" . $this->request->getArgument('uid');
+        if ($this->request->hasArgument('uid')) {
             $records = $this->dataResolver->resolve(
                 $this->configuration,
                 $this->request->getControllerActionName(),
-                $whereClause
+                'uid=' . $this->request->getArgument('uid')
             );
 
             $this->view->assignMultiple([
@@ -96,6 +94,7 @@ class TcafeController extends ActionController
 
         }
     }
+
     /**
      * @param array $filterValues
      */
