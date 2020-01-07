@@ -3,20 +3,10 @@ storagePid: 7
 list:
   filters:
     -
-      type: Input
-      fields: 'first_name,last_name,username'
-      label: Rechercher
-      placeholder: Rechercher
-    -
-      type: Checkbox
-      field: sexe
-      items:
-        0: Masculin
-        1: Feminin
-    -
       type: Select
       field: usergroup
       foreignFields: first_name, last_name
+      fieldset: 1
       excludeNonUsedValues: true
       displayCount: true
       additionalWhereClause: 'pid=7'
@@ -24,6 +14,7 @@ list:
     -
       type: Select
       field: select_single_3
+      fieldset: 1
       items:
         1: Toto
         2: Tata
@@ -55,6 +46,9 @@ list:
         title:
           label: Nom du groupe
   pagination:
-    itemsPerPage: 10
+    itemsPerPage: 1
+    maximumNumberOfLinks: 10
+    insertAbove: 1
+    insertBellow: 1
 detail:
   pid: 123

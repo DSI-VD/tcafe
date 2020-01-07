@@ -50,17 +50,22 @@ class TcafeController extends ActionController
 
     /**
      * The list action.
+     *
+     * @param int $currentPage
      */
-    public function listAction()
+    public function listAction(int $currentPage = 0)
     {
         $records = $this->dataResolver->resolve(
             $this->configuration,
-            'list'
+            'list',
+            '',
+            $currentPage
         );
 
         $this->setTemplate();
         $this->view->assignMultiple([
             $this->fluidVariableName => $records,
+            'currentPage' => $currentPage,
             'configuration' => $this->configuration
         ]);
     }
@@ -89,13 +94,15 @@ class TcafeController extends ActionController
      * The filter action.
      *
      * @param array $filterValues
+     * @param int $currentPage
      */
-    public function filterAction(array $filterValues = [])
+    public function filterAction(array $filterValues = [], int $currentPage = 0)
     {
         $records = $this->dataResolver->resolve(
             $this->configuration,
             'list',
             '',
+            $currentPage,
             $filterValues
         );
 
@@ -103,6 +110,7 @@ class TcafeController extends ActionController
         $this->view->assignMultiple([
             $this->fluidVariableName => $records,
             'filters' => $this->configuration['list']['filters'],
+            'currentPage' => $currentPage,
             'configuration' => $this->configuration,
             'filterValues' => $filterValues,
         ]);
