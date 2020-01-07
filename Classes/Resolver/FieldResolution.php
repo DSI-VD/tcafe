@@ -172,31 +172,4 @@ class FieldResolution
     {
         $this->config = $config;
     }
-
-    /**
-     * @param string $tableLocal
-     */
-    public function getTableLocal(array $tableLocal)
-    {
-        $this->tableLocal = $tableLocal;
-    }
-
-    /**
-     * @param array $items
-     * @return array
-     */
-    protected function cleanMultiValues(array $items): array
-    {
-        $cleanValues = [];
-        foreach ($items as $item) {
-            if (strpos($item[0], 'LLL:') !== false) {
-                $item[0] = LocalizationUtility::translate($this->config['label']);
-            }
-            if ($item[1] !== '--div--') {
-                $cleanValues[$item[1]] = $item[0];
-            }
-        }
-
-        return $cleanValues;
-    }
 }

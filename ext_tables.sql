@@ -1,4 +1,5 @@
 #
+<<<<<<< HEAD
 # Table structure for table 'tx_tcafe_record'
 #
 CREATE TABLE tx_tcafe_record (
@@ -42,3 +43,10 @@ CREATE TABLE tt_content (
 	tx_tcafe_relation_inline int(11) DEFAULT '0' NOT NULL,
 );
 
+=======
+# Table structure for table 'fe_users'
+#
+CREATE TABLE fe_users (
+	select_single_3 varchar(255) DEFAULT '' NOT NULL,
+);
+>>>>>>> 556b0464133216238e42423c96df559a0637458c
