@@ -23,7 +23,8 @@ class FieldResolution
     protected $config = [];
 
     /**
-     * map field type for fluid with values
+     * Map field type for fluid with values.
+     *
      * @param string $name
      * @param string $value
      * @param array $config
@@ -198,6 +199,4 @@ class FieldResolution
 
         return $cleanValues;
     }
-
-
 }

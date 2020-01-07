@@ -8,17 +8,5 @@
         <f:form.submit value="Submit" class="btn btn-primary" />
     </f:form>
 </f:if>
-<f:if condition="{rows}">
-	<f:then>
-        <table class="table">
-            <f:render partial="List/TableHead" arguments="{rows: rows}" />
-            <f:render partial="List/TableBody" arguments="{_all}" />
-        </table>
-    </f:then>
-    <f:else>
-        <div class="alert alert-warning" role="alert">
-            No rows found...
-        </div>
-    </f:else>
-</f:if>
+<f:render partial="List/Table" arguments="{_all}" />
 </html>

@@ -30,8 +30,6 @@ class RelationViewHelper extends AbstractViewHelper
         RenderingContextInterface $renderingContext
     ) {
         $variableProvider = $renderingContext->getVariableProvider();
-        /** @var FieldResolution $field */
-        $field = $arguments['field'];
         $foreignTable = $GLOBALS['TCA'][$arguments['table']]['columns'][$arguments['foreignFieldName']]['config']['foreign_table'];
 
         $config = [

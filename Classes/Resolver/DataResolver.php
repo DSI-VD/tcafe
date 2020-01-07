@@ -9,7 +9,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class DataResolver
 {
     /**
-     * Resolve tcafe.table.actions with clauses
+     * Find the data according to the configuration.
+     *
      * @param array $configuration
      * @param string $action
      * @param string $clauses
@@ -31,24 +32,28 @@ class DataResolver
 
         $filters = $configuration['list']['filters'];
         $i = 0;
-        foreach ($filters as $filter) {
-            switch ($filter['type']) {
-                case 'Input':
-                    foreach (explode(',', $filter['fields']) as $field) {
-                        $queryBuilder->orWhere(
-                            $queryBuilder->expr()->like($field, $queryBuilder->quote('%' . $filterValues[$i] . '%'))
-                        );
+        if (!empty($filterValues)) {
+            foreach ($filters as $filter) {
+                if ($filterValues[$i] !== '') {
+                    switch ($filter['type']) {
+                        case 'Input':
+                            foreach (explode(',', $filter['fields']) as $field) {
+                                $queryBuilder->orWhere(
+                                    $queryBuilder->expr()->like($field, $queryBuilder->quote('%' . $filterValues[$i] . '%'))
+                                );
+                            }
+                            break;
+                        case 'Select':
+                            $queryBuilder->andWhere(
+                                $queryBuilder->expr()->eq($filter['field'], $queryBuilder->quote($filterValues[$i]))
+                            );
+                            break;
+                        default:
+                            break;
                     }
-                    break;
-                case 'Select':
-                    $queryBuilder->andWhere(
-                        $queryBuilder->expr()->like($filter['field'], $queryBuilder->quote('%' . $filterValues[$i] . '%'))
-                    );
-                    break;
-                default:
-                    break;
+                }
+                $i++;
             }
-            $i++;
         }
 
         $queryBuilder->addSelect('uid');
@@ -77,81 +82,7 @@ class DataResolver
         } else {
             $data = $rows;
         }
+
         return $data;
     }
-
-    /**
-     * Get Foreign relations for FieldResolution
-     * @param string $localTable
-     * @param FieldResolution $field
-     * @param string $clauses
-     * @param int $localUid
-     * @return FieldResolution[]
-     */
-    public function resolveFields(
-        string $localTable,
-        FieldResolution $field,
-        string $clauses = '',
-        int $localUid = null
-    ): array {
-
-        $tableLocal = $field->getTableLocal ?? $localTable;
-
-        // case select and group relation
-        $referenceIndex = GeneralUtility::makeInstance(ReferenceIndex::class);
-        $relationsRecords = $referenceIndex->getRelations($tableLocal,
-            ['uid' => $localUid, $field->getName() => $field->getValue()]);
-
-        // other case
-
-
-        // use $relationsRecords
-        $data = [];
-        $selectFields = [];
-        $relatedRows = [];
-        foreach ($field->getConfig()['fields'] as $key => $v) {
-            $selectFields[] = $key;
-        }
-
-        foreach ($relationsRecords[$field->getName()]['itemArray'] as $relation) { // uid tablename
-            /** @var QueryBuilder $queryBuilder */
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($relation['table']);
-            foreach ($selectFields as $k => $v) {
-                $queryBuilder->addSelect($v);
-            }
-            if (!empty($clauses)) {
-                $queryBuilder->where($clauses);
-            }
-            $queryBuilder->addSelect('uid');
-            $queryBuilder->addSelect('pid');
-            $queryBuilder->andWhere(
-                $queryBuilder->expr()->eq('uid', $relation['id'])
-            );
-            $statement = $queryBuilder
-                ->from($relation['table'])
-                ->execute();
-
-            $row = $statement->fetch();
-
-            // $newArr = array_map(function($item){ return $item['email'];}, $rows);
-            $row['_table_'] = $relation['table'];
-
-            $relatedRows[] = $row;
-        }
-
-        foreach ($relatedRows as $key => $row) {
-            foreach ($row as $fieldK => $value) {
-                $data[$key][$fieldK] = new FieldResolution(
-                    $fieldK,
-                    $value,
-                    $fieldsConfig[$fieldK] ?? [],
-                    $GLOBALS['TCA'][$table = $row['_table_']]['columns'][$fieldK] ?? [],
-                    $row['_table_']
-                );
-                unset($data[$key]['_table_']);
-            }
-        }
-        return $data;
-    }
-
 }

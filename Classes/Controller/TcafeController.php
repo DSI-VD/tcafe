@@ -7,10 +7,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use Vd\Tcafe\Resolver\DataResolver;
-use Vd\Tcafe\Resolver\FilterResolver;
 use Vd\Tcafe\Validator\ConfigurationFileException;
 use Vd\Tcafe\Validator\ConfigurationValidator;
-use Vd\Tcafe\Validator\FileErrorConfigurationException;
 
 class TcafeController extends ActionController
 {
@@ -23,10 +21,6 @@ class TcafeController extends ActionController
      * @var DataResolver
      */
     private $dataResolver = null;
-    /**
-     * @var FilterResolver
-     */
-    private $filterResolver = null;
 
     /**
      * @var string
@@ -55,7 +49,7 @@ class TcafeController extends ActionController
     }
 
     /**
-     * The list action
+     * The list action.
      */
     public function listAction()
     {
@@ -75,24 +69,20 @@ class TcafeController extends ActionController
      * The detail action.
      *
      * @param int $uid
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException
      */
     public function detailAction(int $uid)
     {
-        if ($this->request->hasArgument('uid')) {
-            $records = $this->dataResolver->resolve(
-                $this->configuration,
-                'detail',
-                'uid=' . $this->request->getArgument('uid')
-            );
+        $records = $this->dataResolver->resolve(
+            $this->configuration,
+            'detail',
+            'uid=' . $uid
+        );
 
-            $this->view->assignMultiple([
-                'currentPid' => $GLOBALS['TSFE']->id,
-                $this->fluidVariableName => $records,
-                'configuration' => $this->configuration
-            ]);
-
-        }
+        $this->view->assignMultiple([
+            'currentPid' => $GLOBALS['TSFE']->id,
+            $this->fluidVariableName => $records,
+            'configuration' => $this->configuration
+        ]);
     }
 
     /**
