@@ -73,7 +73,11 @@ class FieldResolution
                             break;
                     }
                 } else {
-                    $this->config['type'] = 'Text';
+                    if ($tcaColumn['config']['enableRichtext']) {
+                        $this->config['type'] = 'RichText';
+                    } else {
+                        $this->config['type'] = 'Text';
+                    }
                 }
                 break;
             case 'check':

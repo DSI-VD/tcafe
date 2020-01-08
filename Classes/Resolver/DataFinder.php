@@ -43,12 +43,17 @@ class DataFinder
             $queryBuilder->where($additionalWhereClause);
         }
 
+        // Add storagePids clause
+        if (isset($configuration['storagePids'])) {
+            $queryBuilder->where($queryBuilder->expr()->in('pid', explode(',', $configuration['storagePids'])));
+        }
+
         // Add where clause from filters.
         if (!empty($filterValues)) {
             $filters = $configuration['list']['filters'];
             $i = 0;
             foreach ($filters as $filter) {
-                if ($filterValues[$i] !== '') {
+                if ($filterValues[$i] !== null && $filterValues[$i] !== '') {
                     switch ($filter['type']) {
                         case 'Input':
                             foreach (explode(',', $filter['fields']) as $field) {
@@ -66,9 +71,6 @@ class DataFinder
                             );
                             break;
                         default:
-                            $queryBuilder->andWhere(
-                                $queryBuilder->expr()->eq($filter['field'], $queryBuilder->quote($filterValues[$i]))
-                            );
                             break;
                     }
                 }
@@ -178,6 +180,8 @@ class DataFinder
                 $cleanValues[$item[1]] = $item[0];
             }
         }
+
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($cleanValues);
 
         return $cleanValues;
     }
