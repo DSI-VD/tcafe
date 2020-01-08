@@ -1,11 +1,17 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
-{action->f:debug()}
+
 <f:if condition="{f:count(subject: pagination.pages)} > 1">
     <nav>
         <ul class="pagination justify-content-center">
             <li class="page-item{f:if(condition: '{currentPage} == 0', then: ' disabled')}">
                 <f:link.action class="page-link" action="{action}" arguments="{currentPage: '{currentPage - 1}'}">&laquo;</f:link.action>
             </li>
+            <f:if condition="{pagination.displayRangeStart} > 1">
+                <li><f:link.action class="page-link" action="{action}" arguments="{currentPage: 0}">1</f:link.action></li>
+            </f:if>
+            <f:if condition="{pagination.hasLessPages}">
+                <li>…</li>
+            </f:if>
             <f:for each="{pagination.pages}" as="page">
                <f:if condition="{page.active}">
                	    <f:then>
@@ -14,12 +20,22 @@
                         </li>
                     </f:then>
                	    <f:else>
-                        <li class="page-item">
-                            <f:link.action class="page-link" action="{action}" arguments="{currentPage: page.index}">{page.label}</f:link.action>
-                        </li>
+                        <f:if condition="{page.index} > {pagination.displayRangeStart} && {page.index} < {pagination.displayRangeEnd}">
+                            <li class="page-item">
+                                <f:link.action class="page-link" action="{action}" arguments="{currentPage: page.index}">{page.label}</f:link.action>
+                            </li>
+                        </f:if>
                     </f:else>
                </f:if>
             </f:for>
+            <f:if condition="{pagination.hasMorePages}">
+                <li>…</li>
+            </f:if>
+            <f:if condition="{pagination.displayRangeEnd} < {pagination.numberOfPages}">
+                <li class="last">
+                    <f:link.action class="page-link" action="{action}" arguments="{currentPage: pagination.lastPage}">{pagination.numberOfPages}</f:link.action>
+                </li>
+            </f:if>
             <li class="page-item{f:if(condition: '{currentPage + 1} == {pagination.numberOfPages}', then: ' disabled')}">
                 <f:link.action class="page-link" action="{action}" arguments="{currentPage: '{currentPage + 1}'}">&raquo;</f:link.action>
             </li>

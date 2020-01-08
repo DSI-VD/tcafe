@@ -95,6 +95,33 @@ class DataFinder
             }
 
             $configuration[$action]['pagination']['pages'] = [];
+
+            // Data needed to build the pagination
+            $numberOfPages = $configuration[$action]['pagination']['numberOfPages'];
+            $maximumNumberOfLinks = $configuration[$action]['pagination']['maximumNumberOfLinks'];
+            if ($maximumNumberOfLinks > $numberOfPages) {
+                $maximumNumberOfLinks = $numberOfPages;
+            }
+
+            $delta = floor($maximumNumberOfLinks / 2);
+            $displayRangeStart = $currentPage - $delta;
+
+            $displayRangeEnd = $currentPage + $delta - ($maximumNumberOfLinks % 2 === 0 ? 1 : 0);
+            if ($displayRangeStart < 1) {
+                $displayRangeEnd -= $displayRangeStart - 1;
+            }
+            if ($displayRangeEnd > $numberOfPages) {
+                $displayRangeStart -= $displayRangeEnd - $numberOfPages;
+            }
+            $displayRangeStart = (int)max($displayRangeStart, 1);
+            $displayRangeEnd = (int)min($displayRangeEnd, $numberOfPages);
+
+            $configuration[$action]['pagination']['displayRangeStart'] = $displayRangeStart;
+            $configuration[$action]['pagination']['displayRangeEnd'] = $displayRangeEnd;
+            $configuration[$action]['pagination']['hasLessPages'] = $displayRangeStart > 2;
+            $configuration[$action]['pagination']['hasMorePages'] = $displayRangeEnd + 1 < $numberOfPages;
+            $configuration[$action]['pagination']['lastPage'] = $numberOfPages -1;
+
             for ($i = 0; $i < $configuration[$action]['pagination']['numberOfPages']; $i++) {
                 $configuration[$action]['pagination']['pages'][] = [
                     'active' => $i == $currentPage,
