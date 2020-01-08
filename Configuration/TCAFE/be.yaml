@@ -5,8 +5,7 @@ list:
     -
       type: Select
       field: usergroup
-      foreignFields: first_name, last_name
-      fieldset: 1
+      foreignFieldsLabel: first_name, last_name
       excludeNonUsedValues: true
       displayCount: true
       additionalWhereClause: 'pid=7'
@@ -14,7 +13,6 @@ list:
     -
       type: Select
       field: select_single_3
-      fieldset: 1
       items:
         1: Toto
         2: Tata
@@ -46,7 +44,7 @@ list:
         title:
           label: Nom du groupe
   pagination:
-    itemsPerPage: 1
+    itemsPerPage: 2
     maximumNumberOfLinks: 10
     insertAbove: 1
     insertBellow: 1

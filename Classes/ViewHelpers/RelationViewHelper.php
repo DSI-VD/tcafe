@@ -6,7 +6,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
-use Vd\Tcafe\Resolver\DataResolver;
+use Vd\Tcafe\Resolver\DataFinder;
 use Vd\Tcafe\Resolver\FieldResolution;
 
 class RelationViewHelper extends AbstractViewHelper
@@ -40,8 +40,8 @@ class RelationViewHelper extends AbstractViewHelper
         ];
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($arguments['table']);
-        $dataResolver = GeneralUtility::makeInstance(DataResolver::class);
-        $rows = $dataResolver->resolve(
+        $dataResolver = GeneralUtility::makeInstance(DataFinder::class);
+        $rows = $dataResolver->find(
             $config,
             'list',
             $queryBuilder->expr()->in('uid', $arguments['foreignFieldValue'])

@@ -29,16 +29,12 @@ class FieldResolution
      * @param string $value
      * @param array $config
      * @param array $tcaColumn
-     * @param string $tableLocal
-     * @param array $linkedFields List of fields to be linked to detail PID
      */
     public function __construct(
         $name,
         $value,
         array $config,
-        array $tcaColumn,
-        string $tableLocal,
-        array $linkedFields = []
+        array $tcaColumn
     ) {
         $this->name = $name;
         $this->value = $value;
@@ -58,14 +54,6 @@ class FieldResolution
             !isset($this->config['label'])
         ) {
             $this->config['visible'] = false;
-        }
-        // set current table
-        $this->config['tableLocal'] = $tableLocal;
-
-        // Add into the configuration the information that we have to make a link on this field
-        $this->config['linkedField'] = false;
-        if (is_array($linkedFields) && in_array($name, $linkedFields)) {
-            $this->config['linkedField'] = true;
         }
 
         // Set the type

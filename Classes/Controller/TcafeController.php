@@ -6,7 +6,7 @@ use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Fluid\View\StandaloneView;
-use Vd\Tcafe\Resolver\DataResolver;
+use Vd\Tcafe\Resolver\DataFinder;
 use Vd\Tcafe\Validator\ConfigurationFileException;
 use Vd\Tcafe\Validator\ConfigurationValidator;
 
@@ -18,7 +18,7 @@ class TcafeController extends ActionController
     protected $configuration = [];
 
     /**
-     * @var DataResolver
+     * @var DataFinder
      */
     private $dataResolver = null;
 
@@ -35,7 +35,7 @@ class TcafeController extends ActionController
      */
     public function initializeAction()
     {
-        $this->dataResolver = GeneralUtility::makeInstance(DataResolver::class);
+        $this->dataResolver = GeneralUtility::makeInstance(DataFinder::class);
         try {
             $fileLoader = GeneralUtility::makeInstance(YamlFileLoader::class);
             $this->configuration = $fileLoader->load($this->settings['configurationFilePath']);
@@ -55,7 +55,7 @@ class TcafeController extends ActionController
      */
     public function listAction(int $currentPage = 0)
     {
-        $records = $this->dataResolver->resolve(
+        $records = $this->dataResolver->find(
             $this->configuration,
             'list',
             '',
@@ -77,7 +77,7 @@ class TcafeController extends ActionController
      */
     public function detailAction(int $uid)
     {
-        $records = $this->dataResolver->resolve(
+        $records = $this->dataResolver->find(
             $this->configuration,
             'detail',
             'uid=' . $uid
@@ -94,15 +94,15 @@ class TcafeController extends ActionController
      * The filter action.
      *
      * @param array $filterValues
-     * @param int $currentPage
+     * @param int $page
      */
-    public function filterAction(array $filterValues = [], int $currentPage = 0)
+    public function filterAction(array $filterValues = [], int $page = 0)
     {
-        $records = $this->dataResolver->resolve(
+        $records = $this->dataResolver->find(
             $this->configuration,
             'list',
             '',
-            $currentPage,
+            $page,
             $filterValues
         );
 
@@ -110,7 +110,7 @@ class TcafeController extends ActionController
         $this->view->assignMultiple([
             $this->fluidVariableName => $records,
             'filters' => $this->configuration['list']['filters'],
-            'currentPage' => $currentPage,
+            'currentPage' => $page,
             'configuration' => $this->configuration,
             'filterValues' => $filterValues,
         ]);

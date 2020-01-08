@@ -7,7 +7,7 @@ use TYPO3\CMS\Core\Database\ReferenceIndex;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
-class DataResolver
+class DataFinder
 {
     /**
      * Find the data according to the configuration.
@@ -19,24 +19,23 @@ class DataResolver
      * @param array $filterValues
      * @return array
      */
-    public function resolve(array &$configuration, string $action, string $additionalWhereClause = '', int $currentPage = 0, array $filterValues = []): array
+    public function find(array &$configuration, string $action, string $additionalWhereClause = '', int $currentPage = 0, array $filterValues = []): array
     {
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($configuration['table']);
 
         if (isset($configuration[$action]['pagination'])) {
-            $queryBuilder
-                ->setMaxResults($configuration[$action]['pagination']['itemsPerPage'])
-                ->setFirstResult($currentPage * (int)$configuration[$action]['pagination']['itemsPerPage']);
-
             $configuration[$action]['pagination']['numberOfRecords'] = $queryBuilder
                 ->count('uid')
                 ->from($configuration['table'])
                 ->execute()->fetchColumn(0);
-            $configuration[$action]['pagination']['numberOfPages'] =
-                $configuration[$action]['pagination']['numberOfRecords'] / (int)$configuration[$action]['pagination']['itemsPerPage'];
 
-            $queryBuilder->getConcreteQueryBuilder()->resetQueryParts();
+            $queryBuilder->resetQueryParts();
+            $queryBuilder
+                ->setMaxResults($configuration[$action]['pagination']['itemsPerPage'])
+                ->setFirstResult($currentPage * (int)$configuration[$action]['pagination']['itemsPerPage']);
+            $configuration[$action]['pagination']['numberOfPages'] =
+                ceil($configuration[$action]['pagination']['numberOfRecords'] / (int)$configuration[$action]['pagination']['itemsPerPage']);
         }
 
         foreach ($configuration[$action]['fields'] as $key => $field) {
@@ -64,7 +63,9 @@ class DataResolver
                             $queryBuilder->andWhere(
                                 $queryBuilder->expr()->eq($filter['field'], $queryBuilder->quote($filterValues[$i]))
                             );
-                            $items = $this->cleanMultiValues($GLOBALS['TCA'][$configuration['table']]['columns'][$filter['field']]['config']['items']);
+                            $items = self::cleanSelectSingleItems(
+                                $GLOBALS['TCA'][$configuration['table']]['columns'][$filter['field']]['config']['items']
+                            );
                             break;
                         default:
                             $queryBuilder->andWhere(
@@ -94,9 +95,7 @@ class DataResolver
                         $field,
                         $value,
                         $configuration[$action]['fields'][$field] ?? [],
-                        $GLOBALS['TCA'][$configuration['table']]['columns'][$field] ?? [],
-                        $configuration['table'],
-                        $configuration[$action]['linkedFields'] ?? []
+                        $GLOBALS['TCA'][$configuration['table']]['columns'][$field] ?? []
                     );
                 }
             }
@@ -107,17 +106,16 @@ class DataResolver
         return $data;
     }
 
-
     /**
      * @param array $items
      * @return array
      */
-    protected function cleanMultiValues(?array $items): array
+    protected static function cleanSelectSingleItems(?array $items): array
     {
         $cleanValues = [];
         foreach ($items as $item) {
             if (strpos($item[0], 'LLL:') !== false) {
-                $item[0] = LocalizationUtility::translate($this->config['label']);
+                $item[0] = LocalizationUtility::translate($item[0]);
             }
             if ($item[1] !== '--div--') {
                 $cleanValues[$item[1]] = $item[0];
