@@ -43,6 +43,11 @@ class DataFinder
             $queryBuilder->where($additionalWhereClause);
         }
 
+        // Add storagePids clause
+        if (isset($configuration['storagePids'])) {
+            $queryBuilder->where($queryBuilder->expr()->in('pid', explode(',', $configuration['storagePids'])));
+        }
+
         // Add where clause from filters.
         if (!empty($filterValues)) {
             $filters = $configuration['list']['filters'];
