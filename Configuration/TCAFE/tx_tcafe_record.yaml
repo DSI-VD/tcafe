@@ -40,7 +40,7 @@ list:
           title:
 
   pagination:
-    itemsPerPage: 2
+    itemsPerPage: 10
     maximumNumberOfLinks: 10
     insertAbove: 1
     insertBellow: 1
