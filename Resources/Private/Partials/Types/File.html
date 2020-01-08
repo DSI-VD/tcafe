@@ -1,14 +1,20 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:tcafe="http://typo3.org/ns/Vd/Tcafe/ViewHelpers" data-namespace-typo3-fluid="true">
 <tcafe:fal data="{tcafe:getDataFromRow(row: row)}" field="{field.name}" table="{configuration.table}" as="files">
     <f:for each="{files}" as="file">
-        <f:if condition="({action} == 'list' && {field.config.linkedField})">
-            <f:then>
-                <f:link.action action="detail" pageUid="{configuration.detail.pid}"><f:image treatIdAsReference="1" src="{file.uid}"/></f:link.action>
-            </f:then>
-            <f:else>
-                <f:image treatIdAsReference="1" src="{file.uid}"/>
-            </f:else>
-        </f:if>
+        <f:switch expression="{file.type}">
+            <f:case value="3">
+                <f:render partial="Types/File/Audio" arguments="{file: file, field: field, settings: settings}" />
+            </f:case>
+            <f:case value="4">
+                <f:render partial="Types/File/Video" arguments="{file: file, field: field, settings: settings}" />
+            </f:case>
+            <f:case value="5">
+                <f:render partial="Types/File/Document" arguments="{file: file, field: field, settings: settings}" />
+            </f:case>
+            <f:defaultCase>
+                <f:render partial="Types/File/Image" arguments="{file: file, field: field, settings: settings}" />
+            </f:defaultCase>
+        </f:switch>
     </f:for>
 </tcafe:fal>
 </html>

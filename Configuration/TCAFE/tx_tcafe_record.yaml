@@ -8,6 +8,14 @@ list:
       # fields: 'title,bodytext,tx_tcafe_many.title' @todo
       label: Rechercher
       placeholder: Rechercher
+    -
+      type: Select
+      field: 'relation_to'
+      label: Select
+      foreignFieldsLabel: title
+
+
+
   fields:
     title:
       label: Titre
@@ -23,7 +31,6 @@ list:
       fields:
         pid:
         title:
-
     relation_to:
       fields:
         title:
@@ -39,12 +46,14 @@ list:
     relation_inline:
         fields:
           title:
+          relation_fal:
     relation_fal:
-        fields:
-          title:
-
+      mediaWidth: 160c
+      mediaHeight: 90c
+      fields:
+        title:
   pagination:
-    itemsPerPage: 10
+    itemsPerPage: 3
     maximumNumberOfLinks: 10
     insertAbove: 1
     insertBellow: 1

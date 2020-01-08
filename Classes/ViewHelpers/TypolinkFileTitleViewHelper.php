@@ -39,7 +39,8 @@ class TypolinkFileTitleViewHelper extends AbstractViewHelper
         /** @var File $file */
         $file = $linkDetails['file'];
 
-        return $file->getProperty('title') !== '' ? $file->getProperty('title') : $file->getName();
+        $prop = $file->getProperty('title');
+        return isset($prop) && $prop !== '' ? $file->getProperty('title') : $file->getName() ;
     }
 
     /**
