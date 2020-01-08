@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2019-01-08T08:00:00Z" product-name="tcafe">
+		<header/>
+		<body>
+			<trans-unit id="tx_tcafe_record.datetime" xml:space="preserve">
+				<source>Datetime</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

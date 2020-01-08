@@ -1,6 +1,7 @@
 <?php
 defined('TYPO3_MODE') or die();
 
+$ll = 'LLL:EXT:tcafe/Resources/Private/Language/locallang_db.xlf:';
 
 return [
     'ctrl' => [
@@ -30,9 +31,86 @@ return [
         'showRecordFieldList' => 'cruser_id,pid,sys_language_uid,l10n_parent,l10n_diffsource,hidden,starttime,endtime,fe_group,title,bodytext,datetime,url,file_url,relation_categories,relation_csv,relation_many,relation_fal,relation_inline'
     ],
     'columns' => [
-
-
-
+        'hidden' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.visible',
+            'config' => [
+                'type' => 'check',
+                'renderType' => 'checkboxToggle',
+                'items' => [
+                    [
+                        0 => '',
+                        1 => '',
+                        'invertStateDisplay' => true
+                    ]
+                ],
+            ]
+        ],
+        'starttime' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
+            'config' => [
+                'type' => 'input',
+                'renderType' => 'inputDateTime',
+                'eval' => 'datetime,int',
+                'default' => 0
+            ],
+            'l10n_mode' => 'exclude',
+            'l10n_display' => 'defaultAsReadonly'
+        ],
+        'endtime' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.endtime',
+            'config' => [
+                'type' => 'input',
+                'renderType' => 'inputDateTime',
+                'eval' => 'datetime,int',
+                'default' => 0,
+                'range' => [
+                    'upper' => mktime(0, 0, 0, 1, 1, 2038)
+                ]
+            ],
+            'l10n_mode' => 'exclude',
+            'l10n_display' => 'defaultAsReadonly'
+        ],
+        'fe_group' => [
+            'exclude' => true,
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.fe_group',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectMultipleSideBySide',
+                'size' => 5,
+                'maxitems' => 20,
+                'items' => [
+                    [
+                        'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.hide_at_login',
+                        -1
+                    ],
+                    [
+                        'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.any_login',
+                        -2
+                    ],
+                    [
+                        'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.usergroups',
+                        '--div--'
+                    ]
+                ],
+                'exclusiveKeys' => '-1,-2',
+                'foreign_table' => 'fe_groups',
+                'foreign_table_where' => 'ORDER BY fe_groups.title',
+                'enableMultiSelectFilterTextfield' => true
+            ]
+        ],
+        'datetime' => [
+            'exclude' => false,
+            'label' => $ll . 'tx_tcafe_record.datetime',
+            'config' => [
+                'type' => 'input',
+                'renderType' => 'inputDateTime',
+                'size' => 16,
+                'eval' => 'datetime,int',
+            ]
+        ],
         'title' => [
             'exclude' => false,
             'l10n_mode' => 'prefixLangTitle',
@@ -53,16 +131,6 @@ return [
                 'softref' => 'rtehtmlarea_images,typolink_tag,images,email[subst],url',
                 'enableRichtext' => true,
                 'richtextConfiguration' => 'default',
-            ]
-        ],
-        'datetime' => [
-            'exclude' => false,
-            'label' => 'Date time',
-            'config' => [
-                'type' => 'input',
-                'renderType' => 'inputDateTime',
-                'size' => 16,
-                'eval' => 'datetime,int',
             ]
         ],
         'url' => [
@@ -105,7 +173,7 @@ return [
                 'MM' => 'sys_category_record_mm',
                 'MM_match_fields' => [
                     'fieldname' => 'categories',
-                    'tablenames' => 'tx_news_domain_model_news',
+                    'tablenames' => 'tx_news_domain_model_news', // ???
                 ],
                 'MM_opposite_field' => 'items',
                 'foreign_table' => 'sys_category',
@@ -124,17 +192,17 @@ return [
             'config' => [
                 'type' => 'group',
                 'internal_type' => 'db',
-                'allowed' => 'tx_news_domain_model_news',
-                'foreign_table' => 'tx_news_domain_model_news',
+                'allowed' => 'tx_news_domain_model_news', // ???
+                'foreign_table' => 'tx_news_domain_model_news', // ???
                 'MM_opposite_field' => 'related_from',
                 'size' => 5,
                 'minitems' => 0,
                 'maxitems' => 100,
-                'MM' => 'tx_news_domain_model_news_related_mm',
+                'MM' => 'tx_news_domain_model_news_related_mm', // ???
                 'suggestOptions' => [
                     'default' => [
                         'suggestOptions' => true,
-                        'addWhere' => ' AND tx_news_domain_model_news.uid != ###THIS_UID###'
+                        'addWhere' => ' AND tx_news_domain_model_news.uid != ###THIS_UID###' // ???
                     ]
                 ],
                 'behaviour' => [
@@ -150,7 +218,7 @@ return [
                 'allowed' => 'tt_content',
                 'foreign_table' => 'tt_content',
                 'foreign_sortby' => 'sorting',
-                'foreign_field' => 'tx_news_related_news',
+                'foreign_field' => 'tx_news_related_news', // ???
                 'minitems' => 0,
                 'maxitems' => 99,
                 'appearance' => [
@@ -190,7 +258,7 @@ return [
                     ],
                     'foreign_match_fields' => [
                         'fieldname' => 'fal_media',
-                        'tablenames' => 'tx_news_domain_model_news',
+                        'tablenames' => 'tx_news_domain_model_news', // ???
                         'table_local' => 'sys_file',
                     ],
 
