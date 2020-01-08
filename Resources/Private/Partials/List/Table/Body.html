@@ -2,7 +2,7 @@
 <f:for each="{rows}" as="row">
     <tr>
         <f:for each="{row}" as="field" iteration="it">
-            <f:if condition="{field.config.visible}">
+            <f:if condition="{field.config.hidden} == FALSE">
                 <td>
                     <f:render partial="Types/{field.config.type}" arguments="{field: field, configuration: configuration, row: row, settings: settings, action:'list'}"/>
                 </td>

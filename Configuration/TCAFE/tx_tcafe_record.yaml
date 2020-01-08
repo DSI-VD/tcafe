@@ -17,9 +17,13 @@ list:
     datetime:
       format: '%d %B %Y'
     url:
+    tstamp:
+    pid:
     relation_csv:
       fields:
+        pid:
         title:
+
     relation_to:
       fields:
         title:

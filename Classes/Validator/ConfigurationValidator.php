@@ -3,7 +3,7 @@ namespace Vd\Tcafe\Validator;
 
 class ConfigurationValidator
 {
-    const IGNORE_FIELDS = [
+    const UNDEFINED_FIELDS_IN_TCA = [
         'uid' => ['type' => 'Text'],
         'pid' => ['type' => 'Text'],
         't3ver_id' => ['type' => 'Text'],
@@ -39,7 +39,7 @@ class ConfigurationValidator
         }
 
         foreach ($configuration[$action]['fields'] as $key => $field) {
-            if (!array_key_exists($key, self::IGNORE_FIELDS) &&
+            if (!array_key_exists($key, self::UNDEFINED_FIELDS_IN_TCA) &&
                 !isset($GLOBALS['TCA'][$configuration['table']]['columns'][$key])
             ) {
                 throw new UnknownColumnException('The column ' . $key . ' set in ' . $settings['configurationFilePath'] . ' does not exist.');

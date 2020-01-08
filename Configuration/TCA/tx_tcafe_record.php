@@ -362,7 +362,7 @@ return [
             'exclude' => false,
             'label' => 'Relation FAL',
             'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
-                'fal_media',
+                'relation_fal',
                 [
                     'behaviour' => [
                         'allowLanguageSynchronization' => true,
@@ -375,7 +375,7 @@ return [
                         'showSynchronizationLink' => true
                     ],
                     'foreign_match_fields' => [
-                        'fieldname' => 'fal_media',
+                        'fieldname' => 'relation_fal',
                         'tablenames' => 'tx_tcafe_record',
                         'table_local' => 'sys_file',
                     ],

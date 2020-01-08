@@ -6,6 +6,7 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\ReferenceIndex;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 class DataFinder
@@ -134,8 +135,18 @@ class DataFinder
         }
 
         // Select fields.
-        $queryBuilder->addSelect('uid');
-        $queryBuilder->addSelect('pid');
+        if (array_key_exists('pid', $configuration[$action]['fields'])) {
+            $configuration[$action]['fields']['pid']['hidden'] = false;
+        } else {
+            $queryBuilder->addSelect('pid');
+            $configuration[$action]['fields']['pid']['hidden'] = true;
+        }
+        if (array_key_exists('uid', $configuration[$action]['fields'])) {
+            $configuration[$action]['fields']['uid']['hidden'] = false;
+        } else {
+            $queryBuilder->addSelect('uid');
+            $configuration[$action]['fields']['uid']['hidden'] = true;
+        }
         foreach ($configuration[$action]['fields'] as $key => $field) {
             $queryBuilder->addSelect($key);
         }
