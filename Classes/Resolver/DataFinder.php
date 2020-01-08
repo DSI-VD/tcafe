@@ -5,10 +5,24 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\ReferenceIndex;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 class DataFinder
 {
+    /**
+     * @var UriBuilder
+     */
+    protected $uriBuilder = null;
+
+    /**
+     * @param UriBuilder $uriBuilder
+     */
+    public function __construct(UriBuilder $uriBuilder = null)
+    {
+        $this->uriBuilder = $uriBuilder;
+    }
+
     /**
      * Find the data according to the configuration.
      *
@@ -24,31 +38,15 @@ class DataFinder
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($configuration['table']);
 
-        if (isset($configuration[$action]['pagination'])) {
-            $configuration[$action]['pagination']['numberOfRecords'] = $queryBuilder
-                ->count('uid')
-                ->from($configuration['table'])
-                ->execute()->fetchColumn(0);
-
-            $queryBuilder->resetQueryParts();
-            $queryBuilder
-                ->setMaxResults($configuration[$action]['pagination']['itemsPerPage'])
-                ->setFirstResult($currentPage * (int)$configuration[$action]['pagination']['itemsPerPage']);
-            $configuration[$action]['pagination']['numberOfPages'] =
-                ceil($configuration[$action]['pagination']['numberOfRecords'] / (int)$configuration[$action]['pagination']['itemsPerPage']);
-        }
-
-        foreach ($configuration[$action]['fields'] as $key => $field) {
-            $queryBuilder->addSelect($key);
-        }
-
+        // Add additional where clause.
         if (!empty($additionalWhereClause)) {
             $queryBuilder->where($additionalWhereClause);
         }
 
-        $filters = $configuration['list']['filters'];
-        $i = 0;
+        // Add where clause from filters.
         if (!empty($filterValues)) {
+            $filters = $configuration['list']['filters'];
+            $i = 0;
             foreach ($filters as $filter) {
                 if ($filterValues[$i] !== '') {
                     switch ($filter['type']) {
@@ -78,15 +76,53 @@ class DataFinder
             }
         }
 
+        // Add the pagination.
+        if (isset($configuration[$action]['pagination'])) {
+            $recordsCount = $queryBuilder
+                ->count('uid')
+                ->from($configuration['table'])
+                ->execute()->fetchColumn(0);
+
+            $queryBuilder->resetQueryPart('select');
+            $itemsPerPage = (int)$configuration[$action]['pagination']['itemsPerPage'];
+            $queryBuilder
+                ->setMaxResults($itemsPerPage)
+                ->setFirstResult($currentPage * $itemsPerPage);
+
+            $configuration[$action]['pagination']['numberOfPages'] = 0;
+            if ($itemsPerPage !== 0) {
+                $configuration[$action]['pagination']['numberOfPages'] = ceil($recordsCount / $itemsPerPage);
+            }
+
+            $configuration[$action]['pagination']['pages'] = [];
+            for ($i = 0; $i < $configuration[$action]['pagination']['numberOfPages']; $i++) {
+                $configuration[$action]['pagination']['pages'][] = [
+                    'active' => $i == $currentPage,
+                    'label' => $i + 1,
+                    'link' => $this->uriBuilder
+                        ->setArguments([
+                            'tx_tcafe_pi1' => [
+                                'currentPage' => $i
+                            ]
+                        ])
+                        ->uriFor('filter')
+                ];
+            }
+        }
+
+        // Select fields.
         $queryBuilder->addSelect('uid');
         $queryBuilder->addSelect('pid');
+        foreach ($configuration[$action]['fields'] as $key => $field) {
+            $queryBuilder->addSelect($key);
+        }
 
-        $statement = $queryBuilder
-            ->from($configuration['table'])
-            ->execute();
-
+        // Execute the query.
         $data = [];
-        $rows = $statement->fetchAll();
+        $rows = $queryBuilder
+            ->from($configuration['table'])
+            ->execute()
+            ->fetchAll();
 
         if (!isset($configuration[$action]['fluidVariableName'])) {
             foreach ($rows as $key => $row) {
@@ -107,7 +143,7 @@ class DataFinder
     }
 
     /**
-     * @param array $items
+     * @param array|null $items
      * @return array
      */
     protected static function cleanSelectSingleItems(?array $items): array

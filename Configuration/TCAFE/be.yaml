@@ -3,19 +3,10 @@ storagePid: 7
 list:
   filters:
     -
-      type: Select
-      field: usergroup
-      foreignFieldsLabel: first_name, last_name
-      excludeNonUsedValues: true
-      displayCount: true
-      additionalWhereClause: 'pid=7'
-      multi: true
-    -
-      type: Select
-      field: select_single_3
-      items:
-        1: Toto
-        2: Tata
+      type: Input
+      fields: 'first_name,last_name,username'
+      label: Rechercher
+      placeholder: Rechercher
   fields:
     first_name:
       label: Test
