@@ -40,8 +40,8 @@ class RelationViewHelper extends AbstractViewHelper
         ];
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($arguments['table']);
-        $dataResolver = GeneralUtility::makeInstance(DataFinder::class);
-        $rows = $dataResolver->find(
+        $dataFinder = GeneralUtility::makeInstance(DataFinder::class);
+        $rows = $dataFinder->find(
             $config,
             'list',
             $queryBuilder->expr()->in('uid', $arguments['foreignFieldValue'])

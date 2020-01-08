@@ -28,6 +28,11 @@ class TcafeController extends ActionController
     private $fluidVariableName = 'rows';
 
     /**
+     * @var string
+     */
+    protected $action;
+
+    /**
      * Load and validate the configuration file.
      *
      * @throws ConfigurationFileException
@@ -39,8 +44,9 @@ class TcafeController extends ActionController
         try {
             $fileLoader = GeneralUtility::makeInstance(YamlFileLoader::class);
             $this->configuration = $fileLoader->load($this->settings['configurationFilePath']);
-            $action = $this->request->getControllerActionName();
-            ConfigurationValidator::validate($this->configuration, $action, $this->settings);
+            $this->action = $this->request->getControllerActionName();
+
+            ConfigurationValidator::validate($this->configuration, $this->action, $this->settings);
         } catch (ParseException | \RuntimeException $e) {
             throw new ConfigurationFileException('The was a problem loading the configuration file ' . $this->settings['configurationFilePath'] . ' : ' . $e->getMessage());
         } catch (\Exception $e) {
@@ -57,7 +63,7 @@ class TcafeController extends ActionController
     {
         $records = $this->dataFinder->find(
             $this->configuration,
-            'list',
+            $this->action,
             '',
             $currentPage
         );
@@ -66,7 +72,8 @@ class TcafeController extends ActionController
         $this->view->assignMultiple([
             $this->fluidVariableName => $records,
             'currentPage' => $currentPage,
-            'configuration' => $this->configuration
+            'configuration' => $this->configuration,
+            'action' => $this->action
         ]);
     }
 

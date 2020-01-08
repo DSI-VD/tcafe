@@ -1,12 +1,26 @@
 table: fe_users
 storagePid: 7
 list:
+  sort:
+    field: fe_groups.title
+    order: ASC
   filters:
     -
       type: Input
       fields: 'first_name,last_name,username'
       label: Rechercher
       placeholder: Rechercher
+    -
+      type: Select
+      field: usergroup
+      foreignFieldsLabel: first_name, last_name
+      excludeNonUsedValues: true
+      displayCount: true
+      additionalWhereClause: 'pid=7'
+      multi: true
+    -
+      type: Select
+      field: select_single_3
   fields:
     first_name:
       label: Test
@@ -35,7 +49,7 @@ list:
         title:
           label: Nom du groupe
   pagination:
-    itemsPerPage: 2
+    itemsPerPage: 1
     maximumNumberOfLinks: 10
     insertAbove: 1
     insertBellow: 1

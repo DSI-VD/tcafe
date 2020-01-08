@@ -1,6 +1,6 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
 <f:if condition="{filters}">
-    <f:form class="form" action="filter">
+    <f:form class="form mb-4" action="filter">
         <f:for each="{filters}" as="filter" iteration="it">
             <f:variable name="filterValue">{filterValues.{it.index}}</f:variable>
 
@@ -10,5 +10,5 @@
     </f:form>
 </f:if>
 <f:render partial="List/Table" arguments="{_all}" />
-<f:render partial="Pagination/Pagination" arguments="{currentPage: currentPage, pagination: configuration.list.pagination}" />
+<f:render partial="Pagination/Pagination" arguments="{currentPage: currentPage, pagination: configuration.list.pagination, filterValues: filterValues}" />
 </html>

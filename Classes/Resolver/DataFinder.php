@@ -53,7 +53,7 @@ class DataFinder
             $filters = $configuration['list']['filters'];
             $i = 0;
             foreach ($filters as $filter) {
-                if ($filterValues[$i] !== '') {
+                if ($filterValues[$i] !== null && $filterValues[$i] !== '') {
                     switch ($filter['type']) {
                         case 'Input':
                             foreach (explode(',', $filter['fields']) as $field) {
@@ -71,9 +71,6 @@ class DataFinder
                             );
                             break;
                         default:
-                            $queryBuilder->andWhere(
-                                $queryBuilder->expr()->eq($filter['field'], $queryBuilder->quote($filterValues[$i]))
-                            );
                             break;
                     }
                 }
@@ -104,13 +101,7 @@ class DataFinder
                 $configuration[$action]['pagination']['pages'][] = [
                     'active' => $i == $currentPage,
                     'label' => $i + 1,
-                    'link' => $this->uriBuilder
-                        ->setArguments([
-                            'tx_tcafe_pi1' => [
-                                'currentPage' => $i
-                            ]
-                        ])
-                        ->uriFor('filter')
+                    'index' => $i
                 ];
             }
         }
@@ -162,6 +153,8 @@ class DataFinder
                 $cleanValues[$item[1]] = $item[0];
             }
         }
+
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($cleanValues);
 
         return $cleanValues;
     }
