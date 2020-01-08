@@ -1,11 +1,10 @@
 <?php
 defined('TYPO3_MODE') or die();
 
-$ll = 'LLL:EXT: ' . \Vd\Tcafe\Utility\ConfigurationUtility::EXT_KEY . '/Resources/Private/Language/locallang_db.xlf:';
 
 return [
     'ctrl' => [
-        'title' => 'tcafe records',
+        'title' => 'tcafe many',
         'descriptionColumn' => 'notes',
         'label' => 'title',
         'tstamp' => 'tstamp',
@@ -29,7 +28,7 @@ return [
         'searchFields' => 'uid,title',
     ],
     'interface' => [
-        'showRecordFieldList' => 'cruser_id,pid,sys_language_uid,l10n_parent,l10n_diffsource,hidden,starttime,endtime,fe_group,title,bodytext,datetime,url,relation_categories,relation_csv,relation_many,relation_fal,relation_inline'
+        'showRecordFieldList' => 'cruser_id,pid,sys_language_uid,l10n_parent,l10n_diffsource,hidden,starttime,endtime,fe_group,title,bodytext,datetime,url,relation_from'
     ],
     'columns' => [
         // TYPO3 DEFAULT
@@ -225,42 +224,6 @@ return [
                 'softref' => 'typolink'
             ]
         ],
-
-        'relation_csv' => [
-            'label' => 'Relation type csv',
-            'config' => [
-                'type' => 'select',
-                'renderType' => 'selectMultipleSideBySide',
-                'foreign_table' => 'tx_tcafe_record',
-                'size' => 5,
-                'minitems' => 0,
-            ],
-        ],
-
-        'relation_to' => [
-            'exclude' => true,
-            'label' => 'Related relations to',
-            'config' => [
-                'type' => 'group',
-                'internal_type' => 'db',
-                'allowed' => 'tx_tcafe_record',
-                'foreign_table' => 'tx_tcafe_record',
-                'MM_opposite_field' => 'relation_from',
-                'size' => 5,
-                'minitems' => 0,
-                'maxitems' => 100,
-                'MM' => 'tx_tcafe_record_relation_mm',
-                'suggestOptions' => [
-                    'default' => [
-                        'suggestOptions' => true,
-                        'addWhere' => ' AND tx_tcafe_record.uid != ###THIS_UID###'
-                    ]
-                ],
-                'behaviour' => [
-                    'allowLanguageSynchronization' => true,
-                ],
-            ]
-        ],
         'relation_from' => [
             'exclude' => true,
             'label' => 'Related relations from',
@@ -271,128 +234,18 @@ return [
                 'allowed' => 'tx_tcafe_record',
                 'size' => 5,
                 'maxitems' => 100,
-                'MM' => 'tx_tcafe_record_relation_mm',
+                'MM' => 'tx_tcafe_record_many_mm',
                 'readOnly' => 1,
             ]
-        ],
-        'relation_categories' => [
-            'exclude' => false,
-            'label' => 'Relation to sys categories, select mm with MM_opposite_field',
-            'config' => [
-                'type' => 'select',
-                'renderType' => 'selectTree',
-                'treeConfig' => [
-                    'parentField' => 'parent',
-                    'appearance' => [
-                        'showHeader' => true,
-                        'expandAll' => true,
-                        'maxLevels' => 99,
-                    ],
-                ],
-                'MM' => 'sys_category_record_mm',
-                'MM_match_fields' => [
-                    'fieldname' => 'categories',
-                    'tablenames' => 'tx_tcafe_record',
-                ],
-                'MM_opposite_field' => 'items',
-                'foreign_table' => 'sys_category',
-                'foreign_table_where' => ' AND (sys_category.sys_language_uid = 0 OR sys_category.l10n_parent = 0) ORDER BY sys_category.sorting',
-                'size' => 10,
-                'minitems' => 0,
-                'maxitems' => 99,
-                'behaviour' => [
-                    'allowLanguageSynchronization' => true,
-                ],
-            ]
-        ],
-        'relation_many' => [
-            'exclude' => false,
-            'label' => 'Relation many to many, TCA group db with foreign_table',
-            'config' => [
-                'type' => 'group',
-                'internal_type' => 'db',
-                'allowed' => 'tx_tcafe_many',
-                'foreign_table' => 'tx_tcafe_many',
-                'MM_opposite_field' => 'relation_from',
-                'size' => 5,
-                'minitems' => 0,
-                'maxitems' => 100,
-                'MM' => 'tx_tcafe_record_many_mm',
-                'suggestOptions' => [
-                    'default' => [
-                        'suggestOptions' => true,
-                        'addWhere' => ' AND tx_tcafe_record.uid != ###THIS_UID###'
-                    ]
-                ],
-                'behaviour' => [
-                    'allowLanguageSynchronization' => true,
-                ],
-            ]
-        ],
-        'relation_inline' => [
-            'exclude' => false,
-            'label' => 'Relation inline to tcafe_record',
-            'config' => [
-                'type' => 'inline',
-                'allowed' => 'tt_content',
-                'foreign_table' => 'tx_tcafe_record',
-                'foreign_sortby' => 'sorting',
-                'foreign_field' => 'relation_from',
-                'minitems' => 0,
-                'maxitems' => 99,
-                'appearance' => [
-                    'collapseAll' => true,
-                    'expandSingle' => true,
-                    'levelLinksPosition' => 'bottom',
-                    'useSortable' => true,
-                    'showPossibleLocalizationRecords' => true,
-                    'showRemovedLocalizationRecords' => true,
-                    'showAllLocalizationLink' => true,
-                    'showSynchronizationLink' => true,
-                    'enabledControls' => [
-                        'info' => false,
-                    ]
-                ],
-                'behaviour' => [
-                    'allowLanguageSynchronization' => true,
-                ],
-            ]
-        ],
-        'relation_fal' => [
-            'exclude' => false,
-            'label' => 'Relation FAL',
-            'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
-                'fal_media',
-                [
-                    'behaviour' => [
-                        'allowLanguageSynchronization' => true,
-                    ],
-                    'appearance' => [
-                        'createNewRelationLinkTitle' => 'File',
-                        'showPossibleLocalizationRecords' => true,
-                        'showRemovedLocalizationRecords' => true,
-                        'showAllLocalizationLink' => true,
-                        'showSynchronizationLink' => true
-                    ],
-                    'foreign_match_fields' => [
-                        'fieldname' => 'fal_media',
-                        'tablenames' => 'tx_tcafe_record',
-                        'table_local' => 'sys_file',
-                    ],
-
-                ]
-            )
         ],
     ],
     'types' => [
         // default news
         '0' => [
             'showitem' => '
-                    datetime,title,bodytext,url,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:categories,
-                    relation_categories,
+                datetime,title,bodytext,url,
                 --div--;Relations,
-                    relation_csv,relation_many,relation_inline,relation_fal,relation_from,relation_to,
+                    relation_from,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,
                     --palette--;;paletteLanguage,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
@@ -401,7 +254,6 @@ return [
         ],
     ],
     'palettes' => [
-
         'paletteHidden' => [
             'showitem' => 'hidden',
         ],
