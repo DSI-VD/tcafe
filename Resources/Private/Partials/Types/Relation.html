@@ -2,10 +2,8 @@
 <tcafe:relation uidLocal="{row.uid.value}" table="{configuration.table}" foreignFieldName="{field.name}" foreignFieldValue="{field.value}" foreignTableSelectFields="{field.config.fields}">
     <f:for each="{records}" as="record">
         <f:for each="{record}" as="field">
-            <f:if condition="{field.config.type}" >
-                <f:then>
-                    <f:render partial="Types/{field.config.type}" arguments="{field: field, configuration: configuration, row: record, settings: settings}"/>
-                </f:then>
+            <f:if condition="{field.config.hidden} == 0">
+                <f:render partial="Types/{field.config.type}" arguments="{field: field, configuration: configuration, row: record, settings: settings}"/>
             </f:if>
         </f:for><br>
     </f:for>

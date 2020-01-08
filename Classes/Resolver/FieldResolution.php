@@ -48,14 +48,6 @@ class FieldResolution
             $this->config['label'] = LocalizationUtility::translate($this->config['label']);
         }
 
-        // Set the visibility
-        $this->config['visible'] = true;
-        if (array_key_exists($name, ConfigurationValidator::IGNORE_FIELDS) &&
-            !isset($this->config['label'])
-        ) {
-            $this->config['visible'] = false;
-        }
-
         // Set the type
         switch ($tcaColumn['config']['type']) {
             case 'text':
@@ -111,8 +103,8 @@ class FieldResolution
 
 
         // Add default types
-        if (array_key_exists($this->name, ConfigurationValidator::IGNORE_FIELDS)) {
-            ArrayUtility::mergeRecursiveWithOverrule($this->config, ConfigurationValidator::IGNORE_FIELDS[$this->name]);
+        if (array_key_exists($this->name, ConfigurationValidator::UNDEFINED_FIELDS_IN_TCA)) {
+            ArrayUtility::mergeRecursiveWithOverrule($this->config, ConfigurationValidator::UNDEFINED_FIELDS_IN_TCA[$this->name]);
         }
     }
 

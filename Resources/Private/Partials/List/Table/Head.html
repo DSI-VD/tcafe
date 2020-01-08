@@ -3,7 +3,7 @@
     <f:if condition="{it.isFirst}">
         <tr>
             <f:for each="{row}" as="field">
-                <f:if condition="{field.config.visible}">
+                <f:if condition="{field.config.hidden} == 0">
                     <th scope="col">{field.config.label}</th>
                 </f:if>
             </f:for>
