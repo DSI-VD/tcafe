@@ -1,73 +1,48 @@
-
-# doc https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html
-# test online https://yaml-online-parser.appspot.com/
-
----
-table:
-  table:
-    name: Users # default table name
-    label: The users # default TCA
-    query: # default TCA
-      and: pid=2
-
-
-
-
-      list:
-        # default ../Table.name/Action.html
-        templatePath: 'EXT:toto/Resources/Private/Templates/Users/List.html'
-        pid: 123456
-        default:
-          sort:
-            by: username # see TCA
-            direction: ASC
-
-        filters: # OR FLUID ??
-          activ:
-            fields:
-              - input:
-                  label: Rechercher
-                  searchInfields:
-                    - username:
-
-                        condition: and # and/or default or
-                    - first_name:
-
-              - select:
-                  facetedMode: 1
-                  searchInfield: username
-              - radio:
-                  facetedMode: 1
-                  searchInfield: username
-              - checkBox:
-                  facetedMode: 1
-                  searchInfield: username
-
-        pagination: # default TCA # OR FLUID ??
-          activ: 0 # default 1
-
-        infos: # OR FLUID ??
-          activ: 0 # default 1
-          label: Informations
-
+table: tx_tcafe_record
+storagePids: 13
+list:
+  filters:
+    -
+      type: Input
+      fields: 'title,bodytext'
+      # fields: 'title,bodytext,tx_tcafe_many.title' @todo
+      label: Rechercher
+      placeholder: Rechercher
+  fields:
+    title:
+      label: Titre
+    bodytext:
+      crop:
+        maxCharacters: 100
+    datetime:
+      format: '%d %B %Y'
+    url:
+    relation_csv:
+      fields:
+        title:
+    relation_to:
+      fields:
+        title:
+    relation_from:
         fields:
-          first_name:
-            label: Test
-          last_name:
-            label: Name
-            crop:
-              maxCharacters: 2
+          title:
+    relation_categories:
+        fields:
+          title:
+    relation_many:
+        fields:
+          title:
+    relation_inline:
+        fields:
+          title:
+    relation_fal:
+        fields:
+          title:
 
-          username:
-            label: Username
-          usergroup:
-            label: Groups
-      #    sexe:
-      #      label: Sexe
-      #      options:
-      #        0: Feminin
-      #        1: Masculin
-      detail:
-        pid: 123
-        tcaType: fe
-...
+  pagination:
+    itemsPerPage: 2
+    maximumNumberOfLinks: 10
+    insertAbove: 1
+    insertBellow: 1
+detail:
+  pid: 123
