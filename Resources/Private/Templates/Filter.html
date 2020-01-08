@@ -10,5 +10,5 @@
     </f:form>
 </f:if>
 <f:render partial="List/Table" arguments="{_all}" />
-<f:render partial="Pagination/Pagination" arguments="{currentPage: currentPage, pagination: configuration.list.pagination}" />
+<f:render partial="Pagination/Pagination" arguments="{currentPage: currentPage, pagination: configuration.list.pagination, action: action}" />
 </html>

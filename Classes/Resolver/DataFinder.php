@@ -99,13 +99,7 @@ class DataFinder
                 $configuration[$action]['pagination']['pages'][] = [
                     'active' => $i == $currentPage,
                     'label' => $i + 1,
-                    'link' => $this->uriBuilder
-                        ->setArguments([
-                            'tx_tcafe_pi1' => [
-                                'currentPage' => $i
-                            ]
-                        ])
-                        ->uriFor('filter')
+                    'index' => $i
                 ];
             }
         }
