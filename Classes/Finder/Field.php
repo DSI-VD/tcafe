@@ -3,6 +3,7 @@ namespace Vd\Tcafe\Finder;
 
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use Vd\Tcafe\Utility\FieldUtility;
 use Vd\Tcafe\Validator\ConfigurationValidator;
 
 class Field
@@ -77,7 +78,7 @@ class Field
             case 'radio':
                 $this->config['type'] = 'MultiValue';
                 if (!isset($this->config['values'])) {
-                    $this->config['values'] = $this->cleanMultiValues($tcaColumn['config']['items']);
+                    $this->config['values'] = FieldUtility::cleanSelectSingleItems($tcaColumn['config']['items']);
                 }
                 break;
             case 'inline':
@@ -90,7 +91,7 @@ class Field
             case 'select':
                 if (!isset($tcaColumn['config']['foreign_table'])) {
                     $this->config['type'] = 'MultiValue';
-                    $this->config['values'] = $this->cleanMultiValues($tcaColumn['config']['items']);
+                    $this->config['values'] = FieldUtility::cleanSelectSingleItems($tcaColumn['config']['items']);
                 } else {
                     $this->config['type'] = 'Relation';
                 }
@@ -102,13 +103,11 @@ class Field
                 break;
         }
 
-
         // Add default types
         if (array_key_exists($this->name, ConfigurationValidator::UNDEFINED_FIELDS_IN_TCA)) {
             ArrayUtility::mergeRecursiveWithOverrule($this->config, ConfigurationValidator::UNDEFINED_FIELDS_IN_TCA[$this->name]);
         }
     }
-
 
     /**
      * @return string
