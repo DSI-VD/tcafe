@@ -123,11 +123,18 @@ class DataFinder
             $displayRangeStart = (int)max($displayRangeStart, 1);
             $displayRangeEnd = (int)min($displayRangeEnd, $numberOfPages);
 
-            $configuration[$action]['pagination']['displayRangeStart'] = $displayRangeStart;
-            $configuration[$action]['pagination']['displayRangeEnd'] = $displayRangeEnd;
+            $configuration[$action]['pagination']['displayRangeStart'] = $displayRangeStart - 1;
+            $configuration[$action]['pagination']['displayRangeEnd'] = $displayRangeEnd + 1;
             $configuration[$action]['pagination']['hasLessPages'] = $displayRangeStart > 2;
             $configuration[$action]['pagination']['hasMorePages'] = $displayRangeEnd + 1 < $numberOfPages;
             $configuration[$action]['pagination']['lastPage'] = $numberOfPages - 1;
+
+            if ($currentPage + 1 < $numberOfPages) {
+                $configuration[$action]['pagination']['nextPage'] = $currentPage + 1;
+            }
+            if ($currentPage > 1) {
+                $configuration[$action]['pagination']['previousPage'] = $currentPage - 1;
+            }
 
             for ($i = 0; $i < $configuration[$action]['pagination']['numberOfPages']; $i++) {
                 $configuration[$action]['pagination']['pages'][] = [
