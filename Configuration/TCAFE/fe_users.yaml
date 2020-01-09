@@ -1,7 +1,7 @@
 table: fe_users
 storagePid: 7
 list:
-  sort:
+  sorting:
     field: fe_groups.title
     order: ASC
   filters:
@@ -46,6 +46,11 @@ list:
       fields:
         crdate:
           label: Date de création
+        subgroup:
+          label: Sous-groupes
+          fields:
+            title:
+              label: ''
         title:
           label: Nom du groupe
   pagination:
