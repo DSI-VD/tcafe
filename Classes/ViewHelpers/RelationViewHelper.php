@@ -38,13 +38,17 @@ class RelationViewHelper extends AbstractViewHelper
             ]
         ];
 
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($arguments['table']);
-        $dataFinder = GeneralUtility::makeInstance(DataFinder::class);
-        $rows = $dataFinder->find(
-            $config,
-            'list',
-            $queryBuilder->expr()->in('uid', $arguments['foreignFieldValue'])
-        );
+        if($arguments['foreignFieldValue']) {
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($arguments['table']);
+            $dataFinder = GeneralUtility::makeInstance(DataFinder::class);
+            $rows = $dataFinder->find(
+                $config,
+                'list',
+                $queryBuilder->expr()->in('uid', $arguments['foreignFieldValue'])
+            );
+        } else {
+            $rows = [];
+        }
         $variableProvider->add($arguments['as'], $rows);
         $content = $renderChildrenClosure();
         $variableProvider->remove($arguments['as']);
