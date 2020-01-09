@@ -12,6 +12,8 @@ CREATE TABLE tx_tcafe_record (
 	select_checkbox_static tinytext,
 	select_multiplesidebyside_static tinytext,
 	radio_static int(11) DEFAULT '0' NOT NULL,
+	checkbox_static_bool int(11) DEFAULT '0' NOT NULL,
+	checkbox_static int(11) DEFAULT '0' NOT NULL,
 
 	relation_categories int(11) DEFAULT '0' NOT NULL,
 	relation_csv tinytext,

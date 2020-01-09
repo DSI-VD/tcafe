@@ -2,6 +2,7 @@
 namespace Vd\Tcafe\Finder;
 
 use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Vd\Tcafe\Utility\FieldUtility;
 use Vd\Tcafe\Validator\ConfigurationValidator;
@@ -75,11 +76,31 @@ class Field
                 }
                 break;
             case 'check':
-            case 'radio':
-                $this->config['type'] = 'MultiValue';
-                if (!isset($this->config['values'])) {
-                    $this->config['values'] = FieldUtility::cleanSelectSingleItems($tcaColumn['config']['items']);
+                if (!empty($tcaColumn['config']['items'])) {
+                    $bits = array_reverse(str_split(decbin($this->value)));
+                    $items = FieldUtility::cleanCheckBoxItems($tcaColumn['config']['items']);
+                    $i = 0;
+                    $this->value = [];
+                    foreach ($items as $item) {
+                        if (!is_null($bits[$i]) && $bits[$i] == '1') {
+                            $this->value[$i] = $item;
+                        }
+                        $i++;
+                    }
+                    $this->config['type'] = 'Select';
+                } else {
+                    if (!empty($this->config['items'])) {
+                        $tempValue = $this->value;
+                        $this->value = [];
+                        $this->value[] = $this->config['items'][$tempValue];
+                        $this->config['type'] = 'Select';
+                    } else {
+                        $this->config['type'] = 'Text';
+                    }
                 }
+                break;
+            case 'radio':
+                $this->setSelectField($tcaColumn);
                 break;
             case 'inline':
                 if ($tcaColumn['config']['foreign_table'] === 'sys_file_reference') {
@@ -90,8 +111,7 @@ class Field
                 break;
             case 'select':
                 if (!isset($tcaColumn['config']['foreign_table'])) {
-                    $this->config['type'] = 'MultiValue';
-                    $this->config['values'] = FieldUtility::cleanSelectSingleItems($tcaColumn['config']['items']);
+                    $this->setSelectField($tcaColumn);
                 } else {
                     $this->config['type'] = 'Relation';
                 }
@@ -126,11 +146,11 @@ class Field
     }
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getValue(): string
+    public function getValue()
     {
-        return (string)$this->value;
+        return $this->value;
     }
 
     /**
@@ -156,4 +176,19 @@ class Field
     {
         $this->config = $config;
     }
+
+    /**
+     * @param array $tcaColumn
+     */
+    private function setSelectField(array $tcaColumn)
+    {
+        $this->config['type'] = 'Select';
+        $items = FieldUtility::cleanSelectSingleItems($tcaColumn['config']['items']);
+        $tempValue = $this->value;
+        $this->value = [];
+        foreach (explode(',', $tempValue) as $selectedValue) {
+            $this->value[$selectedValue] = $items[$selectedValue];
+        }
+    }
+
 }

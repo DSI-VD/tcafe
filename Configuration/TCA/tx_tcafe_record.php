@@ -227,15 +227,43 @@ return [
             ]
         ],
 
+        'checkbox_static_bool' => [
+            'exclude' => true,
+            'label' => 'checkbox_static_bool',
+            'config' => [
+                'type' => 'check',
+                'default' => 0
+            ]
+        ],
+
+        'checkbox_static' => [
+            'exclude' => 1,
+            'label' => 'checkbox_static',
+            'config' => [
+                'type' => 'check',
+                'items' => [
+                    ['Mo', ''],
+                    ['Tu', ''],
+                    ['We', ''],
+                    ['Th', ''],
+                    ['Fr', ''],
+                    ['Sa', ''],
+                    ['Su', ''],
+                ],
+                'cols' => 'inline',
+            ],
+        ],
+
         'select_single_static' => [
             'label' => 'select_single_static size=6, three options',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'items' => [
+                    ['Flats', '--div--'],
                     ['foo 1', 1],
                     ['foo 2', 2],
-                    ['a divider', '--div--'],
+                    ['Houses', '--div--'],
                     ['foo 3', 3],
                 ],
                 'size' => 6,
@@ -468,7 +496,7 @@ return [
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:categories,
                     relation_categories,
                 --div--;Statics select and radio,
-                    select_single_static,select_singlebox_static,select_checkbox_static,select_multiplesidebyside_static,radio_static,
+                    checkbox_static_bool,checkbox_static,select_single_static,select_singlebox_static,select_checkbox_static,select_multiplesidebyside_static,radio_static,
                 --div--;Relations,
                     relation_csv,relation_many,relation_inline,relation_fal,relation_from,relation_to,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,

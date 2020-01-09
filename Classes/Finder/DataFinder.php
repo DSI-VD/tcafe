@@ -6,6 +6,7 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use Vd\Tcafe\Utility\FieldUtility;
 
 class DataFinder
 {
@@ -71,7 +72,7 @@ class DataFinder
                             $queryBuilder->andWhere(
                                 $queryBuilder->expr()->eq($filter['field'], $queryBuilder->quote($filterValues[$i]))
                             );
-                            $items = self::cleanSelectSingleItems(
+                            $items = FieldUtility::cleanSelectSingleItems(
                                 $GLOBALS['TCA'][$configuration['table']]['columns'][$filter['field']]['config']['items']
                             );
                             break;
@@ -181,24 +182,5 @@ class DataFinder
         }
 
         return $data;
-    }
-
-    /**
-     * @param array|null $items
-     * @return array
-     */
-    protected static function cleanSelectSingleItems(?array $items): array
-    {
-        $cleanValues = [];
-        foreach ($items as $item) {
-            if (strpos($item[0], 'LLL:') !== false) {
-                $item[0] = LocalizationUtility::translate($item[0]);
-            }
-            if ($item[1] !== '--div--') {
-                $cleanValues[$item[1]] = $item[0];
-            }
-        }
-
-        return $cleanValues;
     }
 }
