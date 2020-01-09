@@ -4,7 +4,7 @@ namespace Vd\Tcafe\ViewHelpers;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
-use Vd\Tcafe\Resolver\FieldResolution;
+use Vd\Tcafe\Finder\Field;
 
 class GetDataFromRowViewHelper extends AbstractViewHelper
 {
@@ -27,9 +27,9 @@ class GetDataFromRowViewHelper extends AbstractViewHelper
         RenderingContextInterface $renderingContext
     ) {
         $data = [];
-        /** @var FieldResolution $fieldRes */
-        foreach ($arguments['row'] as $fieldRes) {
-            $data[$fieldRes->getName()] = $fieldRes->getValue();
+        /** @var Field $field */
+        foreach ($arguments['row'] as $field) {
+            $data[$field->getName()] = $field->getValue();
         }
 
         return $data;

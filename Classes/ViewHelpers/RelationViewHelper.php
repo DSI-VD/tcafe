@@ -3,12 +3,10 @@ namespace Vd\Tcafe\ViewHelpers;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
-use Vd\Tcafe\Resolver\DataFinder;
-use Vd\Tcafe\Resolver\FieldResolution;
+use Vd\Tcafe\Finder\DataFinder;
 
 class RelationViewHelper extends AbstractViewHelper
 {

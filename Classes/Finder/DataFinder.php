@@ -1,12 +1,10 @@
 <?php
-namespace Vd\Tcafe\Resolver;
+namespace Vd\Tcafe\Finder;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
-use TYPO3\CMS\Core\Database\ReferenceIndex;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 class DataFinder
@@ -34,8 +32,13 @@ class DataFinder
      * @param array $filterValues
      * @return array
      */
-    public function find(array &$configuration, string $action, string $additionalWhereClause = '', int $currentPage = 0, array $filterValues = []): array
-    {
+    public function find(
+        array &$configuration,
+        string $action,
+        string $additionalWhereClause = '',
+        int $currentPage = 0,
+        array $filterValues = []
+    ): array {
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($configuration['table']);
 
@@ -59,7 +62,8 @@ class DataFinder
                         case 'Input':
                             foreach (explode(',', $filter['fields']) as $field) {
                                 $queryBuilder->orWhere(
-                                    $queryBuilder->expr()->like($field, $queryBuilder->quote('%' . $filterValues[$i] . '%'))
+                                    $queryBuilder->expr()->like($field,
+                                        $queryBuilder->quote('%' . $filterValues[$i] . '%'))
                                 );
                             }
                             break;
@@ -123,7 +127,7 @@ class DataFinder
             $configuration[$action]['pagination']['displayRangeEnd'] = $displayRangeEnd;
             $configuration[$action]['pagination']['hasLessPages'] = $displayRangeStart > 2;
             $configuration[$action]['pagination']['hasMorePages'] = $displayRangeEnd + 1 < $numberOfPages;
-            $configuration[$action]['pagination']['lastPage'] = $numberOfPages -1;
+            $configuration[$action]['pagination']['lastPage'] = $numberOfPages - 1;
 
             for ($i = 0; $i < $configuration[$action]['pagination']['numberOfPages']; $i++) {
                 $configuration[$action]['pagination']['pages'][] = [
@@ -161,7 +165,7 @@ class DataFinder
         if (!isset($configuration[$action]['fluidVariableName'])) {
             foreach ($rows as $key => $row) {
                 foreach ($row as $field => $value) {
-                    $data[$key][$field] = new FieldResolution(
+                    $data[$key][$field] = new Field(
                         $field,
                         $value,
                         $configuration[$action]['fields'][$field] ?? [],
@@ -191,8 +195,6 @@ class DataFinder
                 $cleanValues[$item[1]] = $item[0];
             }
         }
-
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($cleanValues);
 
         return $cleanValues;
     }

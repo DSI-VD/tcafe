@@ -1,12 +1,11 @@
 <?php
-namespace Vd\Tcafe\Resolver;
+namespace Vd\Tcafe\Finder;
 
 use TYPO3\CMS\Core\Utility\ArrayUtility;
-use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Vd\Tcafe\Validator\ConfigurationValidator;
 
-class FieldResolution
+class Field
 {
     /**
      * @var string

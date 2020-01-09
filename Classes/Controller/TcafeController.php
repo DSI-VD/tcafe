@@ -6,7 +6,7 @@ use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Fluid\View\StandaloneView;
-use Vd\Tcafe\Resolver\DataFinder;
+use Vd\Tcafe\Finder\DataFinder;
 use Vd\Tcafe\Validator\ConfigurationFileException;
 use Vd\Tcafe\Validator\ConfigurationValidator;
 
@@ -20,17 +20,17 @@ class TcafeController extends ActionController
     /**
      * @var DataFinder
      */
-    private $dataFinder = null;
+    protected $dataFinder = null;
 
     /**
      * @var string
      */
-    private $fluidVariableName = 'rows';
+    protected $fluidVariableName = 'rows';
 
     /**
      * @var string
      */
-    protected $action;
+    protected $action = '';
 
     /**
      * Load and validate the configuration file.
@@ -45,7 +45,6 @@ class TcafeController extends ActionController
             $fileLoader = GeneralUtility::makeInstance(YamlFileLoader::class);
             $this->configuration = $fileLoader->load($this->settings['configurationFilePath']);
             $this->action = $this->request->getControllerActionName();
-
             ConfigurationValidator::validate($this->configuration, $this->action, $this->settings);
         } catch (ParseException | \RuntimeException $e) {
             throw new ConfigurationFileException('The was a problem loading the configuration file ' . $this->settings['configurationFilePath'] . ' : ' . $e->getMessage());
