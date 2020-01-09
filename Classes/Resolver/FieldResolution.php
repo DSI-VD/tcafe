@@ -2,6 +2,7 @@
 namespace Vd\Tcafe\Resolver;
 
 use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Vd\Tcafe\Validator\ConfigurationValidator;
 
@@ -51,6 +52,7 @@ class FieldResolution
         // Set the type
         switch ($tcaColumn['config']['type']) {
             case 'text':
+            case 'slug':
             case 'input':
                 if (isset($tcaColumn['config']['renderType'])) {
                     switch ($tcaColumn['config']['renderType']) {
