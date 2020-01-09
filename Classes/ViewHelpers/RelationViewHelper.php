@@ -30,26 +30,26 @@ class RelationViewHelper extends AbstractViewHelper
     ) {
         $variableProvider = $renderingContext->getVariableProvider();
         $foreignTable = $GLOBALS['TCA'][$arguments['table']]['columns'][$arguments['foreignFieldName']]['config']['foreign_table'];
-
-        $config = [
+        $newConfiguration = [
             'table' => $foreignTable,
             'list' => [
                 'fields' => $arguments['foreignTableSelectFields']
             ]
         ];
 
-        if($arguments['foreignFieldValue']) {
-            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($arguments['table']);
-            $dataFinder = GeneralUtility::makeInstance(DataFinder::class);
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($arguments['table']);
+        $dataFinder = GeneralUtility::makeInstance(DataFinder::class);
+        $rows = [];
+        if (!empty($arguments['foreignFieldValue'])) {
             $rows = $dataFinder->find(
-                $config,
+                $newConfiguration,
                 'list',
                 $queryBuilder->expr()->in('uid', $arguments['foreignFieldValue'])
             );
-        } else {
-            $rows = [];
         }
+
         $variableProvider->add($arguments['as'], $rows);
+        $variableProvider->add('newConfiguration', $newConfiguration);
         $content = $renderChildrenClosure();
         $variableProvider->remove($arguments['as']);
 

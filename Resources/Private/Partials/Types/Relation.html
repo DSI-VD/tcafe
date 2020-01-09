@@ -3,12 +3,12 @@
     <f:for each="{records}" as="record">
         <dl class="border-bottom">
             <f:for each="{record}" as="field">
-                <f:if condition="{field.config.hidden} == 0">
+                <f:if condition="{field.config.hidden} == 0 && {field.value}">
                     <dt>
                         {field.config.label}
                     </dt>
                     <dd>
-                        <f:render partial="Types/{field.config.type}" arguments="{field: field, configuration: configuration, row: record, settings: settings}"/>
+                        <f:render partial="Types/{field.config.type}" arguments="{field: field, configuration: newConfiguration, row: record, settings: settings}"/>
                     </dd>
                 </f:if>
             </f:for>
