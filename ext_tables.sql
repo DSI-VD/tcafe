@@ -6,6 +6,13 @@ CREATE TABLE tx_tcafe_record (
 	bodytext mediumtext,
 	datetime bigint(20) DEFAULT '0' NOT NULL,
 	url text,
+
+	select_single_static int(11) DEFAULT '0' NOT NULL,
+	select_singlebox_static tinytext,
+	select_checkbox_static tinytext,
+	select_multiplesidebyside_static tinytext,
+	radio_static int(11) DEFAULT '0' NOT NULL,
+
 	relation_categories int(11) DEFAULT '0' NOT NULL,
 	relation_csv tinytext,
 	relation_many int(11) DEFAULT '0' NOT NULL,

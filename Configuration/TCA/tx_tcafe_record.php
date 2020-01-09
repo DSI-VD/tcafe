@@ -29,7 +29,7 @@ return [
         'searchFields' => 'uid,title',
     ],
     'interface' => [
-        'showRecordFieldList' => 'cruser_id,pid,sys_language_uid,l10n_parent,l10n_diffsource,hidden,starttime,endtime,fe_group,title,bodytext,datetime,url,relation_categories,relation_csv,relation_many,relation_fal,relation_inline'
+        'showRecordFieldList' => 'cruser_id,pid,sys_language_uid,l10n_parent,l10n_diffsource,hidden,starttime,endtime,fe_group,title,bodytext,datetime,url,select_single_static,select_singlebox_static,select_checkbox_static,select_multiplesidebyside_static,radio_static,relation_categories,relation_csv,relation_many,relation_fal,relation_inline'
     ],
     'columns' => [
         // TYPO3 DEFAULT
@@ -213,6 +213,7 @@ return [
                 'eval' => 'datetime,int',
             ]
         ],
+
         'url' => [
             'exclude' => false,
             'label' => 'Url',
@@ -224,6 +225,81 @@ return [
                 'eval' => 'trim',
                 'softref' => 'typolink'
             ]
+        ],
+
+        'select_single_static' => [
+            'label' => 'select_single_static size=6, three options',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'items' => [
+                    ['foo 1', 1],
+                    ['foo 2', 2],
+                    ['a divider', '--div--'],
+                    ['foo 3', 3],
+                ],
+                'size' => 6,
+            ],
+        ],
+
+        'select_singlebox_static' => [
+            'label' => 'select_singlebox_static',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingleBox',
+                'items' => [
+                    ['foo 1', 1],
+                    ['foo 2', 2],
+                    ['divider', '--div--'],
+                    ['foo 3', 3],
+                    ['foo 4', 4],
+                ],
+            ],
+        ],
+
+        'select_checkbox_static' => [
+            'label' => 'select_checkbox_3 icons, description',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectCheckBox',
+                'items' => [
+                    ['foo 1', 1, '', 'optional description'],
+                    ['foo 2', 2, '', 'description'],
+                    ['foo 3', 3,],
+                    ['foo 4', 4],
+                ],
+            ],
+        ],
+
+        'select_multiplesidebyside_static' => [
+            'label' => 'select_multiplesidebyside_static multiSelectFilterItems',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectMultipleSideBySide',
+                'items' => [
+                    ['foo 1', 1],
+                    ['foo 2', 2],
+                    ['foo 3', 3],
+                    ['bar', 4],
+                ],
+                'multiSelectFilterItems' => [
+                    ['', ''],
+                    ['foo', 'foo'],
+                    ['bar', 'bar'],
+                ],
+            ],
+        ],
+
+        'radio_static' => [
+            'label' => 'radio_static three options',
+            'config' => [
+                'type' => 'radio',
+                'items' => [
+                    [ 'foo', 1 ], // 'foo' should be a LLL reference
+                    [ 'bar', 2 ],
+                    [ 'foobar', 3 ],
+                ],
+            ],
         ],
 
         'relation_csv' => [
@@ -385,12 +461,14 @@ return [
         ],
     ],
     'types' => [
-        // default news
+        // default news    select_single_static ,select_singlebox_static, select_checkbox_static, select_multiplesidebyside_static, radio_static,
         '0' => [
             'showitem' => '
                     datetime,title,bodytext,url,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:categories,
                     relation_categories,
+                --div--;Statics select and radio,
+                    select_single_static,select_singlebox_static,select_checkbox_static,select_multiplesidebyside_static,radio_static,
                 --div--;Relations,
                     relation_csv,relation_many,relation_inline,relation_fal,relation_from,relation_to,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,
