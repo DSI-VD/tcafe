@@ -45,7 +45,7 @@ class TcafeController extends ActionController
             $fileLoader = GeneralUtility::makeInstance(YamlFileLoader::class);
             $this->configuration = $fileLoader->load($this->settings['configurationFilePath']);
             $this->action = $this->request->getControllerActionName();
-            ConfigurationValidator::validate($this->configuration, $this->action, $this->settings);
+            ConfigurationValidator::validate($this->configuration, $this->action == 'filter' ? 'list' : $this->action, $this->settings);
         } catch (ParseException | \RuntimeException $e) {
             throw new ConfigurationFileException('The was a problem loading the configuration file ' . $this->settings['configurationFilePath'] . ' : ' . $e->getMessage());
         } catch (\Exception $e) {
