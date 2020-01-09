@@ -3,12 +3,12 @@
 <f:if condition="{f:count(subject: pagination.pages)} > 1">
     <nav>
         <ul class="pagination justify-content-center">
-            <f:if condition="{pagination.previousPage}">
+            <f:if condition="{pagination.previousPage} >= 0">
                 <li class="page-item{f:if(condition: '{currentPage} == 0', then: ' disabled')}">
                     <f:link.action class="page-link" action="{action}" arguments="{currentPage: '{currentPage - 1}', filterValues: filterValues}">&laquo;</f:link.action>
                 </li>
             </f:if>
-            <li><f:link.action class="page-link" action="{action}" arguments="{currentPage: 0}">1</f:link.action></li>
+            <li class="page-item{f:if(condition: '{currentPage} == 0', then: ' active')}"><f:link.action class="page-link" action="{action}" arguments="{currentPage: 0}">1</f:link.action></li>
             <f:if condition="{pagination.hasLessPages}">
                 <li>…</li>
             </f:if>
@@ -37,7 +37,7 @@
                     <f:link.action class="page-link" action="{action}" arguments="{currentPage: pagination.lastPage}">{pagination.numberOfPages}</f:link.action>
                 </li>
             </f:if>
-            <f:if condition="{pagination.nextPage}">
+            <f:if condition="{pagination.nextPage} < {pagination.numberOfPages}">
                 <li class="page-item{f:if(condition: '{currentPage + 1} == {pagination.numberOfPages}', then: ' disabled')}">
                     <f:link.action class="page-link" action="{action}" arguments="{currentPage: '{currentPage + 1}', filterValues: filterValues}">&raquo;</f:link.action>
                 </li>

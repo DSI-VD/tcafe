@@ -96,15 +96,12 @@ class DataFinder
                 ->setMaxResults($itemsPerPage)
                 ->setFirstResult($currentPage * $itemsPerPage);
 
-            $configuration[$action]['pagination']['numberOfPages'] = 0;
+            $numberOfPages = 0;
             if ($itemsPerPage !== 0) {
-                $configuration[$action]['pagination']['numberOfPages'] = ceil($recordsCount / $itemsPerPage);
+                $numberOfPages = ceil($recordsCount / $itemsPerPage);
             }
 
-            $configuration[$action]['pagination']['pages'] = [];
-
             // Data needed to build the pagination
-            $numberOfPages = $configuration[$action]['pagination']['numberOfPages'];
             $maximumNumberOfLinks = $configuration[$action]['pagination']['maximumNumberOfLinks'];
             if ($maximumNumberOfLinks > $numberOfPages) {
                 $maximumNumberOfLinks = $numberOfPages;
@@ -112,30 +109,29 @@ class DataFinder
 
             $delta = floor($maximumNumberOfLinks / 2);
             $displayRangeStart = $currentPage - $delta;
-
             $displayRangeEnd = $currentPage + $delta - ($maximumNumberOfLinks % 2 === 0 ? 1 : 0);
+
             if ($displayRangeStart < 1) {
                 $displayRangeEnd -= $displayRangeStart - 1;
             }
+
             if ($displayRangeEnd > $numberOfPages) {
                 $displayRangeStart -= $displayRangeEnd - $numberOfPages;
             }
+
             $displayRangeStart = (int)max($displayRangeStart, 1);
             $displayRangeEnd = (int)min($displayRangeEnd, $numberOfPages);
 
+            $configuration[$action]['pagination']['numberOfPages'] = $numberOfPages;
             $configuration[$action]['pagination']['displayRangeStart'] = $displayRangeStart - 1;
             $configuration[$action]['pagination']['displayRangeEnd'] = $displayRangeEnd + 1;
             $configuration[$action]['pagination']['hasLessPages'] = $displayRangeStart > 2;
             $configuration[$action]['pagination']['hasMorePages'] = $displayRangeEnd + 1 < $numberOfPages;
             $configuration[$action]['pagination']['lastPage'] = $numberOfPages - 1;
+            $configuration[$action]['pagination']['nextPage'] = $currentPage + 1;
+            $configuration[$action]['pagination']['previousPage'] = $currentPage - 1;
 
-            if ($currentPage + 1 < $numberOfPages) {
-                $configuration[$action]['pagination']['nextPage'] = $currentPage + 1;
-            }
-            if ($currentPage > 1) {
-                $configuration[$action]['pagination']['previousPage'] = $currentPage - 1;
-            }
-
+            $configuration[$action]['pagination']['pages'] = [];
             for ($i = 0; $i < $configuration[$action]['pagination']['numberOfPages']; $i++) {
                 $configuration[$action]['pagination']['pages'][] = [
                     'active' => $i == $currentPage,
