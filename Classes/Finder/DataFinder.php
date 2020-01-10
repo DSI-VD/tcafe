@@ -1,8 +1,10 @@
 <?php
 namespace Vd\Tcafe\Finder;
 
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
@@ -53,9 +55,21 @@ class DataFinder
         if (isset($configuration['storagePids'])) {
             $queryBuilder->where($queryBuilder->expr()->in('pid', explode(',', $configuration['storagePids'])));
         }
+
+        // Populate filters.
+        $filters = $configuration['list']['filters'];
+        if (!is_null($filters)) {
+            $i = 0;
+            foreach ($filters as $filter) {
+                if (in_array($filter['type'], ['Select', 'Radio', 'Checkbox'])) {
+                    $configuration[$action]['filters'][$i]['items'] = $this->populateInput($filter, $configuration);
+                }
+                $i++;
+            }
+        }
+
         // Add where clause from filters.
         if (!empty($filterValues)) {
-            $filters = $configuration['list']['filters'];
             $i = 0;
             foreach ($filters as $filter) {
                 if ($filterValues[$i] !== null && $filterValues[$i] !== '') {
@@ -70,12 +84,36 @@ class DataFinder
                             $queryBuilder->andWhere(substr($clauses, 0, -4));
                             break;
                         case 'Select':
-                            $queryBuilder->andWhere(
-                                $queryBuilder->expr()->eq($filter['field'], $queryBuilder->quote($filterValues[$i]))
-                            );
-                            $items = FieldUtility::cleanSelectSingleItems(
-                                $GLOBALS['TCA'][$configuration['table']]['columns'][$filter['field']]['config']['items']
-                            );
+                            $foreignTable = $GLOBALS['TCA'][$configuration['table']]['columns'][$filter['field']]['config']['foreign_table'];
+                            if (!isset($foreignTable)) {
+                                $queryBuilder->andWhere(
+                                    $queryBuilder->expr()->eq($filter['field'], $queryBuilder->quote($filterValues[$i]))
+                                );
+                            } else {
+                                $joinTable = $GLOBALS['TCA'][$configuration['table']]['columns'][$filter['field']]['config']['MM'];
+                                if (!isset($joinTable)) {
+
+                                } else {
+                                    $queryBuilder->leftJoin(
+                                        $configuration['table'],
+                                        $joinTable,
+                                        'mmTable' . $i,
+                                        $queryBuilder->expr()->eq(
+                                            'mmTable' . $i . '.uid_local',
+                                            $queryBuilder->quoteIdentifier($configuration['table'] . '.uid')
+                                        )
+                                    )->andWhere(
+                                        $queryBuilder->expr()->eq('mmTable' . $i . '.uid_foreign', $filterValues[$i])
+                                    );
+
+                                    if ($joinTable === 'sys_category_record_mm') {
+                                        $queryBuilder->andWhere(
+                                            $queryBuilder->expr()->eq('mmTable' . $i . '.tablenames', $queryBuilder->quote($configuration['table'])),
+                                            $queryBuilder->expr()->eq('mmTable' . $i . '.fieldname', $queryBuilder->quote($filter['field']))
+                                        );
+                                    }
+                                }
+                            }
                             break;
                         default:
                             break;
@@ -87,14 +125,14 @@ class DataFinder
 
         // Add the pagination.
         if (isset($configuration[$action]['pagination'])) {
-            $recordsCount = $queryBuilder
+            $queryBuilderCount = $queryBuilder;
+            $recordsCount = $queryBuilderCount
                 ->count('uid')
                 ->from($configuration['table'])
                 ->execute()->fetchColumn(0);
 
-            $queryBuilder->resetQueryPart('select');
             $itemsPerPage = (int)$configuration[$action]['pagination']['itemsPerPage'];
-            $queryBuilder
+            $queryBuilderCount
                 ->setMaxResults($itemsPerPage)
                 ->setFirstResult($currentPage * $itemsPerPage);
 
@@ -160,9 +198,13 @@ class DataFinder
             $queryBuilder->addSelect($key);
         }
 
-
         // Execute the query.
         $data = [];
+
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($queryBuilder->getQueryParts());
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($queryBuilder->getSQL());
+
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($queryBuilder->getQueryParts('from'));
         $rows = $queryBuilder
             ->from($configuration['table'])
             ->execute()
@@ -184,5 +226,65 @@ class DataFinder
         }
 
         return $data;
+    }
+
+    /**
+     * @param array $filter
+     * @param array $configuration
+     * @return array
+     */
+    protected function populateInput(array $filter, array $configuration)
+    {
+        $items = [];
+        $foreignTable = $GLOBALS['TCA'][$configuration['table']]['columns'][$filter['field']]['config']['foreign_table'];
+        if (isset($filter['defaultSelectLabel'])) {
+            $items[''] = $filter['defaultSelectLabel'];
+        } else {
+            $items[''] = '';
+        }
+        if (!isset($foreignTable)) {
+            $items += FieldUtility::cleanSelectSingleItems(
+                $GLOBALS['TCA'][$configuration['table']]['columns'][$filter['field']]['config']['items']
+            );
+        } else {
+            $queryBuilderForeign = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($foreignTable);
+            $queryBuilderLocal = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($configuration['table']);
+            $joinTable = $GLOBALS['TCA'][$configuration['table']]['columns'][$filter['field']]['config']['MM'];
+            if (!isset($joinTable)) {
+
+            } else {
+                $statement = $queryBuilderForeign
+                    ->select('uid', 'title')
+                    ->from($foreignTable)
+                    ->join(
+                        $foreignTable,
+                        $joinTable,
+                        'mmTable',
+                        $queryBuilderForeign->expr()->eq(
+                            'mmTable.uid_foreign',
+                            $queryBuilderForeign->quoteIdentifier($foreignTable . '.uid')
+                        )
+                    )
+                    ->where(
+                        $queryBuilderForeign->expr()->in(
+                            'mmTable.uid_local',
+                            $queryBuilderLocal->select('uid')
+                                ->from($configuration['table'])
+                                ->where(
+                                    $queryBuilderLocal->expr()->in('pid', $configuration['storagePids'])
+                                )->getSQL()
+                        )
+                    )
+                    ->groupBy('uid');
+
+                $rows = $statement->execute()->fetchAll();
+
+                foreach ($rows as $entry) {
+                    $items[$entry['uid']] = $entry['title'];
+                }
+            }
+        }
+
+        return $items;
     }
 }

@@ -77,26 +77,23 @@ class Field
                 break;
             case 'check':
                 if (!empty($tcaColumn['config']['items'])) {
-                    $bits = array_reverse(str_split(decbin($this->value)));
-                    $items = FieldUtility::cleanCheckBoxItems($tcaColumn['config']['items']);
-                    $i = 0;
-                    $this->value = [];
-                    foreach ($items as $item) {
-                        if (!is_null($bits[$i]) && $bits[$i] == '1') {
-                            $this->value[$i] = $item;
-                        }
-                        $i++;
-                    }
-                    $this->config['type'] = 'Select';
-                } else {
-                    if (!empty($this->config['items'])) {
-                        $tempValue = $this->value;
-                        $this->value = [];
-                        $this->value[] = $this->config['items'][$tempValue];
-                        $this->config['type'] = 'Select';
+                    if ($tcaColumn['config']['renderType'] === 'checkboxToggle') {
+                        $this->addSelectItems();
                     } else {
-                        $this->config['type'] = 'Text';
+                        $bits = array_reverse(str_split(decbin($this->value)));
+                        $items = FieldUtility::cleanCheckBoxItems($tcaColumn['config']['items']);
+                        $i = 0;
+                        $this->value = [];
+                        foreach ($items as $item) {
+                            if (!is_null($bits[$i]) && $bits[$i] == '1') {
+                                $this->value[$i] = $item;
+                            }
+                            $i++;
+                        }
+                        $this->config['type'] = 'Select';
                     }
+                } else {
+                    $this->addSelectItems();
                 }
                 break;
             case 'radio':
@@ -187,7 +184,24 @@ class Field
         $tempValue = $this->value;
         $this->value = [];
         foreach (explode(',', $tempValue) as $selectedValue) {
-            $this->value[$selectedValue] = $items[$selectedValue];
+            if (!empty($selectedValue)) {
+                $this->value[$selectedValue] = $items[$selectedValue];
+            }
+        }
+    }
+
+    /**
+     * Add select items
+     */
+    private function addSelectItems()
+    {
+        if (!empty($this->config['items'])) {
+            $tempValue = $this->value;
+            $this->value = [];
+            $this->value[] = $this->config['items'][$tempValue];
+            $this->config['type'] = 'Select';
+        } else {
+            $this->config['type'] = 'Text';
         }
     }
 

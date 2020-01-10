@@ -14,7 +14,6 @@ list:
       type: Select
       field: usergroup
       foreignFieldsLabel: first_name, last_name
-      excludeNonUsedValues: true
       displayCount: true
       additionalWhereClause: 'pid=7'
       multi: true

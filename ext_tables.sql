@@ -62,3 +62,10 @@ CREATE TABLE tx_tcafe_record_relation_mm (
 	KEY uid_local (uid_local),
 	KEY uid_foreign (uid_foreign),
 );
+
+#
+# Table structure for table 'tx_tcafe_record_relation_mm'
+#
+CREATE TABLE tx_news_domain_model_news (
+	select_single_3 tinytext,
+);
