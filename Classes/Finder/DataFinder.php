@@ -5,6 +5,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Vd\Tcafe\Utility\FieldUtility;
 
@@ -52,7 +53,6 @@ class DataFinder
         if (isset($configuration['storagePids'])) {
             $queryBuilder->where($queryBuilder->expr()->in('pid', explode(',', $configuration['storagePids'])));
         }
-
         // Add where clause from filters.
         if (!empty($filterValues)) {
             $filters = $configuration['list']['filters'];
@@ -61,12 +61,13 @@ class DataFinder
                 if ($filterValues[$i] !== null && $filterValues[$i] !== '') {
                     switch ($filter['type']) {
                         case 'Input':
+                            $clauses = '';
                             foreach (explode(',', $filter['fields']) as $field) {
-                                $queryBuilder->orWhere(
+                                $clauses .=
                                     $queryBuilder->expr()->like($field,
-                                        $queryBuilder->quote('%' . $filterValues[$i] . '%'))
-                                );
+                                        $queryBuilder->quote('%' . $filterValues[$i] . '%')) . ' OR ';
                             }
+                            $queryBuilder->andWhere(substr($clauses, 0, -4));
                             break;
                         case 'Select':
                             $queryBuilder->andWhere(
@@ -158,6 +159,7 @@ class DataFinder
         foreach ($configuration[$action]['fields'] as $key => $field) {
             $queryBuilder->addSelect($key);
         }
+
 
         // Execute the query.
         $data = [];
