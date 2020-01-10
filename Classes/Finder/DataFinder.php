@@ -92,7 +92,7 @@ class DataFinder
                             } else {
                                 $joinTable = $GLOBALS['TCA'][$configuration['table']]['columns'][$filter['field']]['config']['MM'];
                                 if (!isset($joinTable)) {
-                                    $queryBuilder->where(
+                                    $queryBuilder->andWhere(
                                         $queryBuilder->expr()->orX(
                                             $queryBuilder->expr()->eq($filter['field'], $filterValues[$i]),
                                             $queryBuilder->expr()->like($filter['field'], $queryBuilder->expr()->literal($filterValues[$i] . ',%')),
@@ -131,12 +131,13 @@ class DataFinder
 
         // Add the pagination.
         if (isset($configuration[$action]['pagination'])) {
-            $recordsCount = $queryBuilder
+            $queryBuilderCounter = clone($queryBuilder);
+            $recordsCount = $queryBuilderCounter
                 ->count('uid')
                 ->from($configuration['table'])
-                ->execute()->fetchColumn(0);
+                ->execute()
+                ->fetchColumn(0);
 
-            $queryBuilder->resetQueryPart('select');
             $itemsPerPage = (int)$configuration[$action]['pagination']['itemsPerPage'];
             $queryBuilder
                 ->setMaxResults($itemsPerPage)
@@ -206,7 +207,6 @@ class DataFinder
 
         // Execute the query.
         $data = [];
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($queryBuilder->getSQL());
         $rows = $queryBuilder
             ->from($configuration['table'])
             ->execute()
