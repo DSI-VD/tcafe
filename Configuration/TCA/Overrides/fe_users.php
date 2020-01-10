@@ -9,10 +9,9 @@ $GLOBALS['TCA']['fe_users']['columns']['select_single_3'] = [
             ['Static values', '--div--'],
             ['static -2', -2],
             ['static -1', -1],
-            ['DB values', '--div--'],
         ],
-        'foreign_table' => 'tx_styleguide_staticdata',
-        'foreign_table_where' => 'AND {#tx_styleguide_staticdata}.{#value_1} LIKE \'%foo%\' ORDER BY uid',
-        'foreign_table_prefix' => 'A prefix: ',
     ],
 ];
+
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('fe_users', 'select_single_3', '', 'after:username');
+

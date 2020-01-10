@@ -92,24 +92,30 @@ class DataFinder
                             } else {
                                 $joinTable = $GLOBALS['TCA'][$configuration['table']]['columns'][$filter['field']]['config']['MM'];
                                 if (!isset($joinTable)) {
-
+                                    $queryBuilder->where(
+                                        $queryBuilder->expr()->orX(
+                                            $queryBuilder->expr()->eq($filter['field'], $filterValues[$i]),
+                                            $queryBuilder->expr()->like($filter['field'], $queryBuilder->expr()->literal($filterValues[$i] . ',%')),
+                                            $queryBuilder->expr()->like($filter['field'], $queryBuilder->expr()->literal('%,' . $filterValues[$i] . ',%')),
+                                            $queryBuilder->expr()->like($filter['field'], $queryBuilder->expr()->literal('%,' . $filterValues[$i]))
+                                        )
+                                    );
                                 } else {
                                     $queryBuilder->leftJoin(
                                         $configuration['table'],
                                         $joinTable,
-                                        'mmTable' . $i,
+                                        'mmTable',
                                         $queryBuilder->expr()->eq(
-                                            'mmTable' . $i . '.uid_local',
+                                            'mmTable.uid_local',
                                             $queryBuilder->quoteIdentifier($configuration['table'] . '.uid')
                                         )
                                     )->andWhere(
-                                        $queryBuilder->expr()->eq('mmTable' . $i . '.uid_foreign', $filterValues[$i])
+                                        $queryBuilder->expr()->eq('mmTable.uid_foreign', $filterValues[$i])
                                     );
-
                                     if ($joinTable === 'sys_category_record_mm') {
                                         $queryBuilder->andWhere(
-                                            $queryBuilder->expr()->eq('mmTable' . $i . '.tablenames', $queryBuilder->quote($configuration['table'])),
-                                            $queryBuilder->expr()->eq('mmTable' . $i . '.fieldname', $queryBuilder->quote($filter['field']))
+                                            $queryBuilder->expr()->eq('mmTable.tablenames', $queryBuilder->quote($configuration['table'])),
+                                            $queryBuilder->expr()->eq('mmTable.fieldname', $queryBuilder->quote($filter['field']))
                                         );
                                     }
                                 }
@@ -125,14 +131,14 @@ class DataFinder
 
         // Add the pagination.
         if (isset($configuration[$action]['pagination'])) {
-            $queryBuilderCount = $queryBuilder;
-            $recordsCount = $queryBuilderCount
+            $recordsCount = $queryBuilder
                 ->count('uid')
                 ->from($configuration['table'])
                 ->execute()->fetchColumn(0);
 
+            $queryBuilder->resetQueryPart('select');
             $itemsPerPage = (int)$configuration[$action]['pagination']['itemsPerPage'];
-            $queryBuilderCount
+            $queryBuilder
                 ->setMaxResults($itemsPerPage)
                 ->setFirstResult($currentPage * $itemsPerPage);
 
@@ -200,11 +206,7 @@ class DataFinder
 
         // Execute the query.
         $data = [];
-
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($queryBuilder->getQueryParts());
         \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($queryBuilder->getSQL());
-
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($queryBuilder->getQueryParts('from'));
         $rows = $queryBuilder
             ->from($configuration['table'])
             ->execute()
@@ -251,9 +253,16 @@ class DataFinder
             $queryBuilderLocal = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($configuration['table']);
             $joinTable = $GLOBALS['TCA'][$configuration['table']]['columns'][$filter['field']]['config']['MM'];
             if (!isset($joinTable)) {
-
+                foreach (explode(',', $filter['foreignFieldsLabel']) as $field) {
+                    $queryBuilderForeign->addSelect($field);
+                }
+                $rows = $queryBuilderForeign
+                    ->from($foreignTable)
+                    ->addSelect('uid', 'pid')
+                    ->execute()
+                    ->fetchAll();
             } else {
-                $statement = $queryBuilderForeign
+                $rows = $queryBuilderForeign
                     ->select('uid', 'title')
                     ->from($foreignTable)
                     ->join(
@@ -275,13 +284,13 @@ class DataFinder
                                 )->getSQL()
                         )
                     )
-                    ->groupBy('uid');
+                    ->groupBy('uid')
+                    ->execute()
+                    ->fetchAll();
+            }
 
-                $rows = $statement->execute()->fetchAll();
-
-                foreach ($rows as $entry) {
-                    $items[$entry['uid']] = $entry['title'];
-                }
+            foreach ($rows as $entry) {
+                $items[$entry['uid']] = $entry['title'];
             }
         }
 
