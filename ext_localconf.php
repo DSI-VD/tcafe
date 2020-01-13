@@ -6,10 +6,10 @@ call_user_func(function ($extensionKey) {
         'Vd.' . $extensionKey,
         \Vd\Tcafe\Utility\ConfigurationUtility::PI1_NAME,
         [
-            'Tcafe' => 'filter,list,detail'
+            'Tcafe' => 'filter,list,detail,json'
         ],
         [
-            'Tcafe' => 'filter'
+            'Tcafe' => 'filter,json'
         ]
     );
 }, \Vd\Tcafe\Utility\ConfigurationUtility::EXT_KEY);

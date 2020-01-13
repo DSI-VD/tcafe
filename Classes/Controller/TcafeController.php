@@ -15,8 +15,6 @@ use Vd\Tcafe\Validator\ConfigurationValidator;
 class TcafeController extends ActionController
 {
 
-    protected $defaultViewObjectName = \TYPO3\CMS\Extbase\Mvc\View\JsonView::class;
-
     /**
      * @var array
      */
@@ -69,11 +67,6 @@ class TcafeController extends ActionController
         } catch (\Exception $e) {
             throw $e;
         }
-    }
-
-    public function initializeFilterAction()
-    {
-        $this->defaultViewObjectName = \TYPO3\CMS\Extbase\Mvc\View\JsonView::class;
     }
 
 
@@ -159,8 +152,11 @@ class TcafeController extends ActionController
             'sortField' => $this->sortField
 
         ]);
+    }
 
-        return json_encode($records);
+    public function jsonAction() {
+        $data = array('value'=>'001');
+        return json_encode($data);
     }
 
     /**

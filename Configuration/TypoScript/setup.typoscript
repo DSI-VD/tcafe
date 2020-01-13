@@ -23,16 +23,16 @@ json {
       }
     }
   }
-  #10 =< tt_content.list.20.tcafe_Pi1
+  #10 < tt_content.list.20.tcafe_Pi1
   10 = USER_INT
   10 {
     userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
     extensionName = Tcafe
-    pluginName = Pi1
     vendorName = Vd
+    pluginName = Pi1
     switchableControllerActions {
-      Controllername {
-        1 = filter
+      Tcafe {
+        1 = json
       }
     }
   }
