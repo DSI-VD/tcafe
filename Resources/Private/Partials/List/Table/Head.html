@@ -4,7 +4,23 @@
         <tr>
             <f:for each="{row}" as="field">
                 <f:if condition="{field.config.hidden} == 0">
-                    <th scope="col">{field.config.label}</th>
+                    <th scope="col">
+                        <f:if condition="{sortField} == {field.name}">
+                            <f:then>
+                                <f:if condition="{sort} == 'desc'">
+                                    <f:then>
+                                        <f:link.action action="{action}" arguments="{currentPage: '{currentPage}', filterValues: filterValues, sort: 'asc', sortField: '{field.name}' }" title="ASC {field.name}">{field.config.label}</f:link.action> <i class="fas fa-sort-up text-right" />
+                                    </f:then>
+                                    <f:else>
+                                        <f:link.action action="{action}" arguments="{currentPage: '{currentPage}', filterValues: filterValues, sort: 'desc', sortField: '{field.name}' }" title="DESC {field.name}">{field.config.label}</f:link.action> <i class="fas fa-sort-down text-right" />
+                                    </f:else>
+                                </f:if>
+                            </f:then>
+                            <f:else>
+                                <f:link.action action="{action}" arguments="{currentPage: '{currentPage}', filterValues: filterValues, sort: 'desc', sortField: '{field.name}' }" title="DESC {field.name}">{field.config.label}</f:link.action> <i class="fas fa-sort-down text-right" />
+                            </f:else>
+                        </f:if>
+                    </th>
                 </f:if>
             </f:for>
         </tr>

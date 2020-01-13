@@ -31,9 +31,11 @@ class DataFinder
      *
      * @param array $configuration
      * @param string $action
-     * @param int $currentPage
      * @param string $additionalWhereClause
+     * @param int $currentPage
      * @param array $filterValues
+     * @param string $sortField The sort field
+     * @param string $sort The sort direction (asc/desc)
      * @return array
      */
     public function find(
@@ -41,7 +43,9 @@ class DataFinder
         string $action,
         string $additionalWhereClause = '',
         int $currentPage = 0,
-        array $filterValues = []
+        array $filterValues = [],
+        string $sortField = '',
+        string $sort = ''
     ): array {
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($configuration['table']);
@@ -142,7 +146,6 @@ class DataFinder
             $queryBuilder
                 ->setMaxResults($itemsPerPage)
                 ->setFirstResult($currentPage * $itemsPerPage);
-
             $numberOfPages = 0;
             if ($itemsPerPage !== 0) {
                 $numberOfPages = ceil($recordsCount / $itemsPerPage);
@@ -188,6 +191,12 @@ class DataFinder
             }
         }
 
+        // Implement sorting
+        $orderBy = $this->checkSorting($sortField, $sort);
+        if(count($orderBy) > 0 && !empty($orderBy['sortField'])) {
+            $queryBuilder->orderBy($orderBy['sortField'], $orderBy['sort']);
+        }
+
         // Select fields.
         if (array_key_exists('pid', $configuration[$action]['fields'])) {
             $configuration[$action]['fields']['pid']['hidden'] = false;
@@ -207,6 +216,7 @@ class DataFinder
 
         // Execute the query.
         $data = [];
+
         $rows = $queryBuilder
             ->from($configuration['table'])
             ->execute()
@@ -295,5 +305,27 @@ class DataFinder
         }
 
         return $items;
+    }
+
+    /**
+     * Isolate the sort direction
+     *
+     * @param string $sortField
+     * @param string $sort
+     * @return array
+     */
+    public function checkSorting($sortField, $sort) {
+        $orderBy = [];
+        $defaultSortDir = isset($confSorting['order']) ?? 'ASC'; // Use configuration or set ASC as default
+        $sortDirection = !empty($sort) ? $sort : $defaultSortDir; // Use default or GET parameter direction
+        if(!empty($sortField)) {
+            $orderBy = [
+                'sortField' => $sortField, // GET param or Default (can be empty)
+                'sort' => strtoupper($sortDirection)
+            ];
+
+        }
+
+        return $orderBy;
     }
 }

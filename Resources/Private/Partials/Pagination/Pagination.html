@@ -5,10 +5,10 @@
         <ul class="pagination justify-content-center">
             <f:if condition="{pagination.previousPage} >= 0">
                 <li class="page-item{f:if(condition: '{currentPage} == 0', then: ' disabled')}">
-                    <f:link.action class="page-link" action="{action}" arguments="{currentPage: '{currentPage - 1}', filterValues: filterValues}">&laquo;</f:link.action>
+                    <f:link.action class="page-link" action="{action}" arguments="{currentPage: '{currentPage - 1}', filterValues: filterValues, sortField: sortField, sort: sort}">&laquo;</f:link.action>
                 </li>
             </f:if>
-            <li class="page-item{f:if(condition: '{currentPage} == 0', then: ' active')}"><f:link.action class="page-link" action="{action}" arguments="{currentPage: 0, filterValues: filterValues}">1</f:link.action></li>
+            <li class="page-item{f:if(condition: '{currentPage} == 0', then: ' active')}"><f:link.action class="page-link" action="{action}" arguments="{currentPage: 0, filterValues: filterValues, sortField: sortField, sort: sort}">1</f:link.action></li>
             <f:if condition="{pagination.hasLessPages}">
                 <li>…</li>
             </f:if>
@@ -17,13 +17,13 @@
                <f:if condition="{page.active} && {pageNum} > 1">
                	    <f:then>
                         <li class="page-item active">
-                            <f:link.action class="page-link" action="{action}" arguments="{currentPage: page.index, filterValues: filterValues}">{page.label} <span class="sr-only">(current)</span></f:link.action>
+                            <f:link.action class="page-link" action="{action}" arguments="{currentPage: page.index, filterValues: filterValues, sortField: sortField, sort: sort}">{page.label} <span class="sr-only">(current)</span></f:link.action>
                         </li>
                     </f:then>
                	    <f:else>
                         <f:if condition="{pageNum} > {pagination.displayRangeStart} && {page.index} > 0 && {pageNum} < {pagination.displayRangeEnd}">
                             <li class="page-item">
-                                <f:link.action class="page-link" action="{action}" arguments="{currentPage: page.index, filterValues: filterValues}">{page.label}</f:link.action>
+                                <f:link.action class="page-link" action="{action}" arguments="{currentPage: page.index, filterValues: filterValues, sortField: sortField, sort: sort}">{page.label}</f:link.action>
                             </li>
                         </f:if>
                     </f:else>
@@ -34,12 +34,12 @@
             </f:if>
             <f:if condition="{pagination.displayRangeEnd} < {pagination.numberOfPages}">
                 <li class="last">
-                    <f:link.action class="page-link" action="{action}" arguments="{currentPage: pagination.lastPage, filterValues: filterValues}">{pagination.numberOfPages}</f:link.action>
+                    <f:link.action class="page-link" action="{action}" arguments="{currentPage: pagination.lastPage, filterValues: filterValues, sortField: sortField, sort: sort}">{pagination.numberOfPages}</f:link.action>
                 </li>
             </f:if>
             <f:if condition="{pagination.nextPage} < {pagination.numberOfPages}">
                 <li class="page-item{f:if(condition: '{currentPage + 1} == {pagination.numberOfPages}', then: ' disabled')}">
-                    <f:link.action class="page-link" action="{action}" arguments="{currentPage: '{currentPage + 1}', filterValues: filterValues}">&raquo;</f:link.action>
+                    <f:link.action class="page-link" action="{action}" arguments="{currentPage: '{currentPage + 1}', filterValues: filterValues, sortField: sortField, sort: sort}">&raquo;</f:link.action>
                 </li>
             </f:if>
         </ul>

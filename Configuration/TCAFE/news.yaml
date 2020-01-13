@@ -24,6 +24,9 @@ filter:
           fields: title
 
 list:
+  sorting:
+    field: title
+    order: ASC
   #  fluidVariableName: users
   templateName: 'EXT:vd_base/Resources/Private/Templates/UserList.html'
   additionnalWhereClause: ''
