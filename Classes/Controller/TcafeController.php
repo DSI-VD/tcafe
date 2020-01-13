@@ -6,6 +6,7 @@ use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use Vd\Tcafe\Finder\DataFinder;
 use Vd\Tcafe\Validator\ConfigurationFileException;
@@ -115,6 +116,7 @@ class TcafeController extends ActionController
      *
      * @param array $filterValues
      * @param int $currentPage
+     * @throws NoSuchArgumentException
      */
     public function filterAction(array $filterValues = [], int $currentPage = 0)
     {
