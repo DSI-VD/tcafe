@@ -125,14 +125,15 @@ class DataFinder
 
         // Add the pagination.
         if (isset($configuration[$action]['pagination'])) {
-            $queryBuilderCount = $queryBuilder;
-            $recordsCount = $queryBuilderCount
+
+            $recordsCount = $queryBuilder
                 ->count('uid')
                 ->from($configuration['table'])
                 ->execute()->fetchColumn(0);
 
+            $queryBuilder->resetQueryPart('select');
             $itemsPerPage = (int)$configuration[$action]['pagination']['itemsPerPage'];
-            $queryBuilderCount
+            $queryBuilder
                 ->setMaxResults($itemsPerPage)
                 ->setFirstResult($currentPage * $itemsPerPage);
 
@@ -200,11 +201,6 @@ class DataFinder
 
         // Execute the query.
         $data = [];
-
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($queryBuilder->getQueryParts());
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($queryBuilder->getSQL());
-
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($queryBuilder->getQueryParts('from'));
         $rows = $queryBuilder
             ->from($configuration['table'])
             ->execute()
