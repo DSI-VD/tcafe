@@ -14,6 +14,9 @@ use Vd\Tcafe\Validator\ConfigurationValidator;
 
 class TcafeController extends ActionController
 {
+
+    protected $defaultViewObjectName = \TYPO3\CMS\Extbase\Mvc\View\JsonView::class;
+
     /**
      * @var array
      */
@@ -67,6 +70,12 @@ class TcafeController extends ActionController
             throw $e;
         }
     }
+
+    public function initializeFilterAction()
+    {
+        $this->defaultViewObjectName = \TYPO3\CMS\Extbase\Mvc\View\JsonView::class;
+    }
+
 
     /**
      * The list action.
@@ -139,7 +148,7 @@ class TcafeController extends ActionController
             $this->sort
         );
 
-        $this->setTemplate();
+        // $this->setTemplate();
         $this->view->assignMultiple([
             $this->fluidVariableName => $records,
             'filters' => $this->configuration['list']['filters'],
@@ -150,6 +159,8 @@ class TcafeController extends ActionController
             'sortField' => $this->sortField
 
         ]);
+
+        return json_encode($records);
     }
 
     /**
