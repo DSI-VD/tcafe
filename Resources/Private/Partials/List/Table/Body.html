@@ -4,7 +4,9 @@
         <f:for each="{row}" as="field" iteration="it">
             <f:if condition="{field.config.hidden} == FALSE">
                 <td>
-                    <f:render partial="Types/{field.config.type}" arguments="{field: field, configuration: configuration, row: row, settings: settings, action:'list'}"/>
+                    <f:if condition="{field.config.type}">
+                        <f:render partial="Types/{field.config.type}" arguments="{field: field, configuration: configuration, row: row, settings: settings, action:'list'}"/>
+                    </f:if>
                 </td>
             </f:if>
         </f:for>
