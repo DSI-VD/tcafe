@@ -13,7 +13,7 @@ list:
       field: 'relation_to'
       label: Select
       foreignFieldsLabel: title
-
+  sortableFilters: [title,relation_csv,relation_to,relation_from,relation_categories,relation_many]
 
 
   fields:
