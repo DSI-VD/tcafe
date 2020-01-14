@@ -61,7 +61,7 @@ class TcafeController extends ActionController
             $this->sortField = $this->configuration[$this->action]['sorting']['field'] ?? '';
             $this->sort = $this->configuration[$this->action]['sorting']['sort'] ?? 'ASC';
 
-            ConfigurationValidator::validate($this->configuration, $this->action == 'filter' ? 'list' : $this->action, $this->settings);
+            ConfigurationValidator::validate($this->configuration, in_array($this->action, ['filter', 'json']) ? 'list' : $this->action, $this->settings);
         } catch (ParseException | \RuntimeException $e) {
             throw new ConfigurationFileException('The was a problem loading the configuration file ' . $this->settings['configurationFilePath'] . ' : ' . $e->getMessage());
         } catch (\Exception $e) {
@@ -154,9 +154,19 @@ class TcafeController extends ActionController
         ]);
     }
 
-    public function jsonAction() {
-        $data = array('value'=>'001');
-        return json_encode($data);
+    public function jsonAction(int $currentPage = 0) {
+        $records = $this->dataFinder->find(
+            $this->configuration,
+            'list',
+            '',
+            $currentPage,
+            [],
+            $this->sortField,
+            $this->sort
+        );
+
+        DebugUtility::debug($records);
+        return json_encode($records);
     }
 
     /**

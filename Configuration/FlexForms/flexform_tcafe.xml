@@ -35,6 +35,10 @@
                                         <numIndex index="0">Filter</numIndex>
                                         <numIndex index="1">Tcafe->filter;Tcafe->list</numIndex>
                                     </numIndex>
+                                    <numIndex index="4">
+                                        <numIndex index="0">Json view</numIndex>
+                                        <numIndex index="1">Tcafe->json</numIndex>
+                                    </numIndex>
                                 </items>
                             </config>
                         </TCEforms>

@@ -15,6 +15,7 @@ json {
   typeNum = 999
   config {
     disableAllHeaderCode = 1
+    debug = 0
     admPanel = 0
     additionalHeaders {
       10 {
@@ -34,6 +35,11 @@ json {
       Tcafe {
         1 = json
       }
+    }
+    settings < plugin.tx_tcafe.settings
+    settings {
+      configurationFilePath = EXT:tcafe/Configuration/TCAFE/news.yaml
+      #overrideFlexformSettingsIfEmpty := addToList(configurationFilePath)
     }
   }
 }
