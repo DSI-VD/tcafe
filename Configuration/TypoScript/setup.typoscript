@@ -3,6 +3,10 @@ plugin.tx_tcafe {
         defaultDateFormat = %d %B %Y
         # Include lib to display icons (Font Awesome, Glyphicons)
         libIconUrl = https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css
+        filter {
+          # Not yet functional
+          includeBootstrapTable = 0
+        }
 
         list {
           defaultMediaWidth = 160c

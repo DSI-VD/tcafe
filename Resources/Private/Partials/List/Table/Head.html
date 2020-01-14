@@ -1,29 +1,31 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
-<f:for each="{rows}" as="row" iteration="it">
-    <f:if condition="{it.isFirst}">
-        <tr>
-            <f:for each="{row}" as="field">
-                <f:if condition="{field.config.hidden} == 0">
-                    <th scope="col">
-                        <f:if condition="{sortField} == {field.name}">
-                            <f:then>
-                                <f:if condition="{sort} == 'desc'">
-                                    <f:then>
-                                        <f:link.action action="{action}" arguments="{currentPage: '{currentPage}', filterValues: filterValues, sort: 'asc', sortField: '{field.name}' }" title="ASC {field.name}">{field.config.label}</f:link.action> <i class="fas fa-sort-up text-right" />
-                                    </f:then>
-                                    <f:else>
-                                        <f:link.action action="{action}" arguments="{currentPage: '{currentPage}', filterValues: filterValues, sort: 'desc', sortField: '{field.name}' }" title="DESC {field.name}">{field.config.label}</f:link.action> <i class="fas fa-sort-down text-right" />
-                                    </f:else>
-                                </f:if>
-                            </f:then>
-                            <f:else>
-                                <f:link.action action="{action}" arguments="{currentPage: '{currentPage}', filterValues: filterValues, sort: 'desc', sortField: '{field.name}' }" title="DESC {field.name}">{field.config.label}</f:link.action> <i class="fas fa-sort-down text-right" />
-                            </f:else>
+    <thead>
+        <f:for each="{rows}" as="row" iteration="it">
+            <f:if condition="{it.isFirst}">
+                <tr>
+                    <f:for each="{row}" as="field">
+                        <f:if condition="{field.config.hidden} == 0">
+                            <th scope="col" {f:if(condition: '{field.sortable}', then: 'data-field="{field.name}" data-sortable="true"', else: '')}>
+                            <f:if condition="{sortField} == {field.name}">
+                                <f:then>
+                                    <f:if condition="{sort} == 'desc'">
+                                        <f:then>
+                                            <f:link.action action="{action}" arguments="{currentPage: '{currentPage}', filterValues: filterValues, sort: 'asc', sortField: '{field.name}' }" title="ASC {field.name}">{field.config.label}</f:link.action> <i class="fas fa-sort-up text-right" />
+                                        </f:then>
+                                        <f:else>
+                                            <f:link.action action="{action}" arguments="{currentPage: '{currentPage}', filterValues: filterValues, sort: 'desc', sortField: '{field.name}' }" title="DESC {field.name}">{field.config.label}</f:link.action> <i class="fas fa-sort-down text-right" />
+                                        </f:else>
+                                    </f:if>
+                                </f:then>
+                                <f:else>
+                                    <f:link.action action="{action}" arguments="{currentPage: '{currentPage}', filterValues: filterValues, sort: 'desc', sortField: '{field.name}' }" title="DESC {field.name}">{field.config.label}</f:link.action> <i class="fas fa-sort-down text-right" />
+                                </f:else>
+                            </f:if>
+                            </th>
                         </f:if>
-                    </th>
-                </f:if>
-            </f:for>
-        </tr>
-    </f:if>
-</f:for>
+                    </f:for>
+                </tr>
+            </f:if>
+        </f:for>
+    </thead>
 </html>

@@ -2,6 +2,7 @@
 namespace Vd\Tcafe\Finder;
 
 use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Vd\Tcafe\Utility\FieldUtility;
@@ -25,22 +26,30 @@ class Field
     protected $config = [];
 
     /**
+     * @var bool
+     */
+    protected $sortable = false;
+
+    /**
      * Map field type for fluid with values.
      *
      * @param string $name
      * @param string $value
      * @param array $config
      * @param array $tcaColumn
+     * @param bool $sortable
      */
     public function __construct(
         $name,
         $value,
         array $config,
-        array $tcaColumn
+        array $tcaColumn,
+        bool $sortable
     ) {
         $this->name = $name;
         $this->value = $value;
         $this->config = $config;
+        $this->sortable = $sortable;
 
         // Set the label
         if (!isset($this->config['label'])) {
@@ -172,6 +181,22 @@ class Field
     public function setConfig(array $config)
     {
         $this->config = $config;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSortable(): bool
+    {
+        return $this->sortable;
+    }
+
+    /**
+     * @param bool $sortable
+     */
+    public function setSortable(bool $sortable): void
+    {
+        $this->sortable = $sortable;
     }
 
     /**

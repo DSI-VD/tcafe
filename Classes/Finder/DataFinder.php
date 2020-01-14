@@ -225,11 +225,13 @@ class DataFinder
         if (!isset($configuration[$action]['fluidVariableName'])) {
             foreach ($rows as $key => $row) {
                 foreach ($row as $field => $value) {
+
                     $data[$key][$field] = new Field(
                         $field,
                         $value,
                         $configuration[$action]['fields'][$field] ?? [],
-                        $GLOBALS['TCA'][$configuration['table']]['columns'][$field] ?? []
+                        $GLOBALS['TCA'][$configuration['table']]['columns'][$field] ?? [],
+                        $this->isSortable($configuration[$action], $field)
                     );
                 }
             }
@@ -314,7 +316,8 @@ class DataFinder
      * @param string $sort
      * @return array
      */
-    public function checkSorting($sortField, $sort) {
+    public function checkSorting($sortField, $sort)
+    {
         $orderBy = [];
         $defaultSortDir = isset($confSorting['order']) ?? 'ASC'; // Use configuration or set ASC as default
         $sortDirection = !empty($sort) ? $sort : $defaultSortDir; // Use default or GET parameter direction
@@ -327,5 +330,30 @@ class DataFinder
         }
 
         return $orderBy;
+    }
+
+    /**
+     * Set the field as sortable or not
+     *
+     * @param $conf
+     * @param $fieldName
+     * @return bool
+     */
+    public function isSortable($conf, $fieldName)
+    {
+        $sortable = false;
+        $confSortableFields = $conf['sortableFilters'];
+
+        // List of fields that require a sort flag
+        if(is_array($confSortableFields)) {
+            if(in_array($fieldName, $confSortableFields)) {
+                $sortable = true;
+            }
+        } else { // All fields are sortable?
+            $matched = preg_match('/^\*$/', $confSortableFields, $match, PREG_OFFSET_CAPTURE);
+            $sortable = $matched[0][1] === 1 ? true : false;
+        }
+
+        return $sortable;
     }
 }
