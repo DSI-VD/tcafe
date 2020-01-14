@@ -129,6 +129,11 @@ class TcafeController extends ActionController
             $this->sortField = trim($this->request->getArgument('sortField'));
         }
 
+        // Add CSS framework for icons (sorting)
+        if($this->settings['libIconUrl']) {
+            $GLOBALS['TSFE']->additionalHeaderData['lib_icon'] = '<link rel="stylesheet" type="text/css" href="' . $this->settings['libIconUrl'] . '" media="all">';
+        }
+
         $records = $this->dataFinder->find(
             $this->configuration,
             'list',

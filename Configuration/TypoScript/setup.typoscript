@@ -1,6 +1,8 @@
 plugin.tx_tcafe {
     settings {
         defaultDateFormat = %d %B %Y
+        # Include lib to display icons (Font Awesome, Glyphicons)
+        libIconUrl = https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css
 
         list {
           defaultMediaWidth = 160c
