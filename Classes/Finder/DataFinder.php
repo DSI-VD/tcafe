@@ -231,7 +231,7 @@ class DataFinder
                         $value,
                         $configuration[$action]['fields'][$field] ?? [],
                         $GLOBALS['TCA'][$configuration['table']]['columns'][$field] ?? [],
-                        $this->isSortable($configuration[$action], $field)
+                        $this->isSortable($configuration[$action]['sorting'], $field)
                     );
                 }
             }
@@ -342,7 +342,7 @@ class DataFinder
     public function isSortable($conf, $fieldName)
     {
         $sortable = false;
-        $confSortableFields = $conf['sortableFilters'];
+        $confSortableFields = $conf['sortableFields'];
 
         // List of fields that require a sort flag
         if(is_array($confSortableFields)) {

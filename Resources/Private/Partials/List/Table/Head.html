@@ -1,10 +1,11 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
     <thead>
-        <f:for each="{rows}" as="row" iteration="it">
-            <f:if condition="{it.isFirst}">
-                <tr>
-                    <f:for each="{row}" as="field">
-                        <f:if condition="{field.config.hidden} == 0">
+        <tr>
+            <f:for each="{row0}" as="field">
+
+                <f:if condition="{field.sortable} == true">
+                    <f:then>
+                        <f:if condition="{field.config.hidden} != 1">
                             <th scope="col" {f:if(condition: '{field.sortable}', then: 'data-field="{field.name}" data-sortable="true"', else: '')}>
                             <f:if condition="{sortField} == {field.name}">
                                 <f:then>
@@ -23,9 +24,21 @@
                             </f:if>
                             </th>
                         </f:if>
-                    </f:for>
-                </tr>
-            </f:if>
-        </f:for>
+                    </f:then>
+                    <f:else>
+                        <f:if condition="{field.config.hidden} != 1">
+                            <f:then>
+                                <th>
+                                    {field.config.label}
+                                </th>
+                            </f:then>
+
+                        </f:if>
+                    </f:else>
+
+                </f:if>
+            </f:for>
+        </tr>
+
     </thead>
 </html>

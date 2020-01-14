@@ -2,7 +2,7 @@
 <f:if condition="{rows}">
     <f:then>
         <table class="table">
-            <f:render partial="List/Table/Head" arguments="{rows: rows, currentPage: currentPage, pagination: configuration.list.pagination, filterValues: filterValues, sortField: sortField, sort: sort}" />
+            <f:render partial="List/Table/Head" arguments="{row0: rows.0, currentPage: currentPage, pagination: configuration.list.pagination, filterValues: filterValues, sortField: sortField, sort: sort}" />
             <f:render partial="List/Table/Body" arguments="{_all}" />
         </table>
     </f:then>
