@@ -2,8 +2,6 @@
 namespace Vd\Tcafe\Finder;
 
 use TYPO3\CMS\Core\Utility\ArrayUtility;
-use TYPO3\CMS\Core\Utility\DebugUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Vd\Tcafe\Utility\FieldUtility;
 use Vd\Tcafe\Validator\ConfigurationValidator;
@@ -50,6 +48,11 @@ class Field
         $this->value = $value;
         $this->config = $config;
         $this->sortable = $sortable;
+
+        if($name === 'relation_from') {
+
+            //$this->value = ['1002', '1003', '999'];
+        }
 
         // Set the label
         if (!isset($this->config['label'])) {
