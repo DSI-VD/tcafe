@@ -41,7 +41,12 @@ class RelationViewHelper extends AbstractViewHelper
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($arguments['table']);
         $dataFinder = GeneralUtility::makeInstance(DataFinder::class);
         $rows = [];
+
+        $sortField = '';
+        $sort = '';
+
         if (!empty($arguments['foreignFieldValue'])) {
+
             $uidValues = $arguments['foreignFieldValue'];
 
             if($foreignTable === 'sys_category') {
@@ -49,6 +54,9 @@ class RelationViewHelper extends AbstractViewHelper
                 $mmMatchFieldFields = $GLOBALS['TCA'][$arguments['table']]['columns'][$arguments['foreignFieldName']]['config']['MM_match_fields'];
                 $selectFields = [];
                 $requiredForeignFields = $newConfiguration['list']['fields'];
+                $sortField = $GLOBALS['TCA'][$foreignTable]['ctrl']['sortby'];
+                $sort = 'ASC'; // set default sorting - cam be implemented in YAML configuration
+
                 // @todo: debug multiple fields for foreign table in YAML file
                 foreach ($requiredForeignFields as $key => $value) {
                     $selectFields[] = $foreignTable . '.' . $key;
@@ -63,10 +71,10 @@ class RelationViewHelper extends AbstractViewHelper
                         $mmTable,
                         'mm',
                         $queryBuilderRelation->expr()->andX(
-                            $queryBuilder->expr()->eq('mm.uid_local', $queryBuilder->quoteIdentifier($foreignTable . '.uid')),
-                            $queryBuilder->expr()->in('mm.uid_foreign', $arguments['uidLocal']),
-                            $queryBuilder->expr()->eq('mm.tablenames', $queryBuilder->quote($mmMatchFieldFields['tablenames'])),
-                            $queryBuilder->expr()->eq('mm.fieldname', $queryBuilder->quote($mmMatchFieldFields['fieldname']))
+                            $queryBuilderRelation->expr()->eq('mm.uid_local',$queryBuilderRelation->quoteIdentifier($foreignTable . '.uid')),
+                            $queryBuilderRelation->expr()->in('mm.uid_foreign', $arguments['uidLocal']),
+                            $queryBuilderRelation->expr()->eq('mm.tablenames', $queryBuilderRelation->quote($mmMatchFieldFields['tablenames'])),
+                            $queryBuilderRelation->expr()->eq('mm.fieldname', $queryBuilderRelation->quote($mmMatchFieldFields['fieldname']))
                         )
                     );
                     $catRows = $statement->execute()->fetchAll();
@@ -82,7 +90,11 @@ class RelationViewHelper extends AbstractViewHelper
             $rows = $dataFinder->find(
                 $newConfiguration,
                 'list',
-                $queryBuilder->expr()->in('uid', $uidValues)
+                $queryBuilder->expr()->in('uid', $uidValues),
+                0,
+                [],
+                $sortField,
+                $sort
             );
         }
 
