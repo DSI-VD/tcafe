@@ -53,18 +53,21 @@ list:
       fields:
         title:
     relation_from:
-        fields:
-          title:
+      fields:
+        title:
     relation_categories:
-        fields:
-          title:
+      fields:
+        title:
+      sorting:
+        field: title
+        order: ASC
     relation_many:
-        fields:
-          title:
+      fields:
+        title:
     relation_inline:
-        fields:
-          title:
-          relation_fal:
+      fields:
+        title:
+        relation_fal:
     relation_fal:
       mediaWidth: 160c
       mediaHeight: 90c

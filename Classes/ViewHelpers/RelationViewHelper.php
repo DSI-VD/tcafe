@@ -54,8 +54,10 @@ class RelationViewHelper extends AbstractViewHelper
                 $mmMatchFieldFields = $GLOBALS['TCA'][$arguments['table']]['columns'][$arguments['foreignFieldName']]['config']['MM_match_fields'];
                 $selectFields = [];
                 $requiredForeignFields = $newConfiguration['list']['fields'];
-                $sortField = $GLOBALS['TCA'][$foreignTable]['ctrl']['sortby'];
-                $sort = 'ASC'; // set default sorting - cam be implemented in YAML configuration
+
+                //  The default order set in the TCA for the foreign table can be overridden in the YAML file
+                $sortField = $arguments['sorting']['field'] ? $arguments['sorting']['field'] : $GLOBALS['TCA'][$foreignTable]['ctrl']['sortby'];
+                $sort = $arguments['sorting']['order'] ? $arguments['sorting']['order'] : 'ASC'; // set default sorting - cam be implemented in YAML configuration
 
                 // @todo: debug multiple fields for foreign table in YAML file
                 foreach ($requiredForeignFields as $key => $value) {
@@ -119,6 +121,7 @@ class RelationViewHelper extends AbstractViewHelper
         $this->registerArgument('foreignFieldValue', 'string', '', true);
         $this->registerArgument('foreignTableSelectFields', 'string', '', true);
         $this->registerArgument('table', 'string', '', true);
+        $this->registerArgument('sorting', 'array', 'Define the order of the listed fields in related table', false);
         $this->registerArgument('as', 'string', '', false, 'records');
     }
 }
