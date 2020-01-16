@@ -38,17 +38,15 @@ class RelationViewHelper extends AbstractViewHelper
             ]
         ];
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($arguments['table']);
-        $dataFinder = GeneralUtility::makeInstance(DataFinder::class);
+        $dataFinder = GeneralUtility::makeInstance(DataFinder::class, $newConfiguration);
         $rows = [];
 
         $sortField = '';
         $sort = '';
 
         if (!empty($arguments['foreignFieldValue'])) {
-
             $uidValues = $arguments['foreignFieldValue'];
-
-            if($foreignTable === 'sys_category') {
+            if ($foreignTable === 'sys_category') {
                 $mmTable = $GLOBALS['TCA'][$arguments['table']]['columns'][$arguments['foreignFieldName']]['config']['MM'];
                 $mmMatchFieldFields = $GLOBALS['TCA'][$arguments['table']]['columns'][$arguments['foreignFieldName']]['config']['MM_match_fields'];
                 $selectFields = [];
@@ -63,7 +61,7 @@ class RelationViewHelper extends AbstractViewHelper
                     $selectFields[] = $foreignTable . '.' . $key;
                 }
 
-                $queryBuilderRelation = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)
+                $queryBuilderRelation = GeneralUtility::makeInstance(ConnectionPool::class)
                     ->getQueryBuilderForTable($foreignTable);
                 // $statement = $queryBuilderRelation->select(implode(',', $selectFields))->from('sys_category')
                 $statement = $queryBuilderRelation->select('uid')->from($foreignTable)
@@ -72,24 +70,25 @@ class RelationViewHelper extends AbstractViewHelper
                         $mmTable,
                         'mm',
                         $queryBuilderRelation->expr()->andX(
-                            $queryBuilderRelation->expr()->eq('mm.uid_local',$queryBuilderRelation->quoteIdentifier($foreignTable . '.uid')),
+                            $queryBuilderRelation->expr()->eq('mm.uid_local', $queryBuilderRelation->quoteIdentifier($foreignTable . '.uid')),
                             $queryBuilderRelation->expr()->in('mm.uid_foreign', $arguments['uidLocal']),
                             $queryBuilderRelation->expr()->eq('mm.tablenames', $queryBuilderRelation->quote($mmMatchFieldFields['tablenames'])),
                             $queryBuilderRelation->expr()->eq('mm.fieldname', $queryBuilderRelation->quote($mmMatchFieldFields['fieldname']))
                         )
                     );
-                    $catRows = $statement->execute()->fetchAll();
+                $catRows = $statement->execute()->fetchAll();
 
-                    $newArr = [];
-                    array_walk_recursive($catRows, function($item) use (&$newArr) { $newArr[] = $item; });
+                $newArr = [];
+                array_walk_recursive($catRows, function ($item) use (&$newArr) {
+                    $newArr[] = $item;
+                });
 
-                    if(count($newArr) > 0) {
-                        $uidValues = implode(',', $newArr);
-                    }
+                if (count($newArr) > 0) {
+                    $uidValues = implode(',', $newArr);
+                }
             }
 
             $rows = $dataFinder->find(
-                $newConfiguration,
                 'list',
                 $queryBuilder->expr()->in('uid', $uidValues),
                 0,

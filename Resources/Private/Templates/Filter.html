@@ -3,12 +3,11 @@
     <f:form class="form mb-4" action="filter">
         <f:for each="{filters}" as="filter" iteration="it">
             <f:variable name="filterValue">{filterValues.{it.index}}</f:variable>
-
-            <f:render partial="Filter/{filter.type}" arguments="{filter: filter, id: it.index, value: filterValue, sortField: sortField, sort: sort}" />
+            <f:render partial="Filter/{filter.config.type}" arguments="{filter: filter.config, id: it.index, value: filterValue, sortField: sortField, sort: sort}" />
         </f:for>
         <f:form.submit value="Submit" class="btn btn-primary" />
     </f:form>
 </f:if>
 <f:render partial="List/Table" arguments="{_all}" />
-<f:render partial="Pagination/Pagination" arguments="{currentPage: currentPage, pagination: configuration.list.pagination, filterValues: filterValues, sortField: sortField, sort: sort}" />
+<f:render partial="Pagination/Pagination" arguments="{currentPage: currentPage, pagination: pagination, filterValues: filterValues, sortField: sortField, sort: sort}" />
 </html>

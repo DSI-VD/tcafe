@@ -1,8 +1,5 @@
 table: tx_tcafe_record
-# cbt
-# storagePids: 25
-# jlt
-storagePids: '%env(STORAGE_PID)%'
+storagePids: 25
 list:
   filters:
     -
@@ -16,13 +13,10 @@ list:
       field: 'relation_to'
       label: Select
       foreignFieldsLabel: title
-
   sorting:
     field: title
     order: ASC
     sortableFields: [title,tstamp,url,relation_csv,relation_to,relation_from,relation_categories,relation_many, select_singlebox_static,checkbox_static_bool]
-
-
   fields:
     title:
       label: Titre

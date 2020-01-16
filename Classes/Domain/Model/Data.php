@@ -1,12 +1,12 @@
 <?php
-namespace Vd\Tcafe\Finder;
+namespace Vd\Tcafe\Domain\Model;
 
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Vd\Tcafe\Utility\FieldUtility;
 use Vd\Tcafe\Validator\ConfigurationValidator;
 
-class Field
+class Data
 {
     /**
      * @var string
@@ -48,11 +48,6 @@ class Field
         $this->value = $value;
         $this->config = $config;
         $this->sortable = $sortable;
-
-        if($name === 'relation_from') {
-
-            //$this->value = ['1002', '1003', '999'];
-        }
 
         // Set the label
         if (!isset($this->config['label'])) {
@@ -232,5 +227,4 @@ class Field
             $this->config['type'] = 'Text';
         }
     }
-
 }
