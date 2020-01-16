@@ -30,11 +30,6 @@ list:
           label: Date de création
         title:
           label: Nom du groupe
-#    sexe:
-#      label: Sexe
-#      options:
-#        0: Feminin
-#        1: Masculin
 detail:
   pid: 123
   tcaType: fe
