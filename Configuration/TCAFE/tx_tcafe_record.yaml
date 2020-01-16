@@ -2,7 +2,7 @@ table: tx_tcafe_record
 # cbt
 # storagePids: 25
 # jlt
-storagePids: 13
+storagePids: '%env(STORAGE_PID)%'
 list:
   filters:
     -

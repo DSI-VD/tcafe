@@ -55,7 +55,8 @@ class TcafeController extends ActionController
         $this->dataFinder = GeneralUtility::makeInstance(DataFinder::class, $this->uriBuilder);
         try {
             $fileLoader = GeneralUtility::makeInstance(YamlFileLoader::class);
-            $this->configuration = $fileLoader->load($this->settings['configurationFilePath']);
+            // Use param flags=1 to check for env variables
+            $this->configuration = $fileLoader->load($this->settings['configurationFilePath'], 1);
             $this->action = $this->request->getControllerActionName();
             $this->sortField = $this->configuration[$this->action]['sorting']['field'] ?? '';
             $this->sort = $this->configuration[$this->action]['sorting']['sort'] ?? 'ASC';
