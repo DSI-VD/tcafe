@@ -1,6 +1,8 @@
 table: tx_tcafe_record
-storagePids: 25
+storagePids: 13
 list:
+  fluidVariableName: users
+  templateName: 'EXT:vd_base/Resources/Private/Templates/UserList.html'
   filters:
     -
       type: Input

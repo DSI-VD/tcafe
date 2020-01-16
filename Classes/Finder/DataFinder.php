@@ -76,21 +76,18 @@ class DataFinder
             ->execute()
             ->fetchAll();
 
-        if (!isset($this->configuration[$action]['fluidVariableName'])) {
-            foreach ($rows as $key => $row) {
-                foreach ($row as $field => $value) {
-                    $data[$key][$field] = new Data(
-                        $field,
-                        $value,
-                        $this->configuration[$action]['fields'][$field] ?? [],
-                        $GLOBALS['TCA'][$this->configuration['table']]['columns'][$field] ?? [],
-                        $this->isSortable($action, $field)
-                    );
-                }
+        foreach ($rows as $key => $row) {
+            foreach ($row as $field => $value) {
+                $data[$key][$field] = new Data(
+                    $field,
+                    $value,
+                    $this->configuration[$action]['fields'][$field] ?? [],
+                    $GLOBALS['TCA'][$this->configuration['table']]['columns'][$field] ?? [],
+                    $this->isSortable($action, $field)
+                );
             }
-        } else {
-            $data = $rows;
         }
+
 
         return $data;
     }

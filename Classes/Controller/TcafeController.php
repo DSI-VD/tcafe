@@ -171,14 +171,14 @@ class TcafeController extends ActionController
      */
     protected function setTemplate(): void
     {
-        if (isset($this->configuration[$this->request->getControllerActionName()]['fluidVariableName'])) {
-            $this->fluidVariableName = $this->configuration[$this->request->getControllerActionName()]['fluidVariableName'] ?? $this->fluidVariableName;
-            if (isset($this->configuration[$this->request->getControllerActionName()]['templateName'])) {
+        if (isset($this->configuration[$this->action]['fluidVariableName'])) {
+            $this->fluidVariableName = $this->configuration[$this->action]['fluidVariableName'] ?? $this->fluidVariableName;
+            if (isset($this->configuration[$this->action]['templateName'])) {
                 $partialRootPaths = $this->view->getPartialRootPaths();
                 $this->view = $this->objectManager->get(StandaloneView::class);
                 $this->view->setFormat('html');
                 $this->view->setTemplatePathAndFilename(
-                    GeneralUtility::getFileAbsFileName($this->configuration[$this->request->getControllerActionName()]['templateName'])
+                    GeneralUtility::getFileAbsFileName($this->configuration[$this->action]['templateName'])
                 );
                 $this->view->setPartialRootPaths($partialRootPaths);
             }

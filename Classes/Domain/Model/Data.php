@@ -227,4 +227,12 @@ class Data
             $this->config['type'] = 'Text';
         }
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+         return (string)$this->value;
+    }
 }
