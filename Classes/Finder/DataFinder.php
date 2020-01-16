@@ -129,12 +129,9 @@ class DataFinder
                                     $this->queryBuilder->andWhere(
                                         $this->queryBuilder->expr()->orX(
                                             $this->queryBuilder->expr()->eq($filter['field'], $filterValues[$i]),
-                                            $this->queryBuilder->expr()->like($filter['field'],
-                                                $this->queryBuilder->expr()->literal($filterValues[$i] . ',%')),
-                                            $this->queryBuilder->expr()->like($filter['field'],
-                                                $this->queryBuilder->expr()->literal('%,' . $filterValues[$i] . ',%')),
-                                            $this->queryBuilder->expr()->like($filter['field'],
-                                                $this->queryBuilder->expr()->literal('%,' . $filterValues[$i]))
+                                            $this->queryBuilder->expr()->like($filter['field'], $this->queryBuilder->expr()->literal($filterValues[$i] . ',%')),
+                                            $this->queryBuilder->expr()->like($filter['field'], $this->queryBuilder->expr()->literal('%,' . $filterValues[$i] . ',%')),
+                                            $this->queryBuilder->expr()->like($filter['field'], $this->queryBuilder->expr()->literal('%,' . $filterValues[$i]))
                                         )
                                     );
                                 } else {

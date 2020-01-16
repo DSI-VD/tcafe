@@ -3,6 +3,7 @@ namespace Vd\Tcafe\Controller;
 
 use Symfony\Component\Yaml\Exception\ParseException;
 use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
@@ -72,13 +73,18 @@ class TcafeController extends ActionController
      * The list action.
      *
      * @param int $currentPage
+     * @throws NoSuchArgumentException
      */
     public function listAction(int $currentPage = 0)
     {
+        $this->setSorting();
         $records = $this->dataFinder->find(
             $this->action,
             '',
-            $currentPage
+            $currentPage,
+            [],
+            $this->sortField,
+            $this->sort
         );
 
         $this->setTemplate();
@@ -118,17 +124,10 @@ class TcafeController extends ActionController
      */
     public function filterAction(array $filterValues = [], int $currentPage = 0)
     {
-        if ($this->request->hasArgument('sort')) {
-            $this->sort = trim($this->request->getArgument('sort'));
-        }
-
-        if ($this->request->hasArgument('sortField')) {
-            $this->sortField = trim($this->request->getArgument('sortField'));
-        }
-
-        // Add CSS framework for icons (sorting)
+        $this->setSorting();
         if($this->settings['libIconUrl']) {
-            $GLOBALS['TSFE']->additionalHeaderData['lib_icon'] = '<link rel="stylesheet" type="text/css" href="' . $this->settings['libIconUrl'] . '" media="all">';
+            $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
+            $pageRenderer->addCssLibrary($this->settings['libIconUrl']);
         }
 
         $records = $this->dataFinder->find(
@@ -150,14 +149,27 @@ class TcafeController extends ActionController
             'filterValues' => $filterValues,
             'sort' => strtolower($this->sort),
             'sortField' => $this->sortField
-
         ]);
+    }
+
+    /**
+     * @throws NoSuchArgumentException
+     */
+    protected function setSorting(): void
+    {
+        if ($this->request->hasArgument('sort')) {
+            $this->sort = trim($this->request->getArgument('sort'));
+        }
+
+        if ($this->request->hasArgument('sortField')) {
+            $this->sortField = trim($this->request->getArgument('sortField'));
+        }
     }
 
     /**
      * Set the correct template.
      */
-    protected function setTemplate()
+    protected function setTemplate(): void
     {
         if (isset($this->configuration[$this->request->getControllerActionName()]['fluidVariableName'])) {
             $this->fluidVariableName = $this->configuration[$this->request->getControllerActionName()]['fluidVariableName'] ?? $this->fluidVariableName;

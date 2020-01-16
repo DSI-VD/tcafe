@@ -1,4 +1,5 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<html lang="en" xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<f:debug>{pagination}</f:debug>
 
 <f:if condition="{f:count(subject: pagination.pages)} > 1">
     <nav>
@@ -13,7 +14,7 @@
                 <li>…</li>
             </f:if>
             <f:for each="{pagination.pages}" as="page">
-                <f:variable name="pageNum">{page.index+1}</f:variable>
+                <f:variable name="pageNum">{page.index + 1}</f:variable>
                <f:if condition="{page.active} && {pageNum} > 1">
                	    <f:then>
                         <li class="page-item active">

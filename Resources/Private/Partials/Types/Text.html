@@ -1,4 +1,4 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<html lang="en" xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
 <f:if condition="({action} == 'list' && {field.config.linkedField})">
     <f:then>
         <f:link.action action="detail" arguments="{uid: 1}" pageUid="{configuration.detail.pid}">{f:if(condition: '{field.config.crop}', then: '{field.value -> f:format.crop(maxCharacters: field.config.crop.maxCharacters)}', else: '{field.value}' )}</f:link.action>

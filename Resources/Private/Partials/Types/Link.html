@@ -1,4 +1,4 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:tcafe="http://typo3.org/ns/Vd/Tcafe/ViewHelpers" data-namespace-typo3-fluid="true">
+<html lang="en" xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:tcafe="http://typo3.org/ns/Vd/Tcafe/ViewHelpers" data-namespace-typo3-fluid="true">
 <f:if condition="{tcafe:strPos(haystack: field.value, needle: 't3://file')}">
     <f:then>
         <f:link.typolink parameter="{field.value}"><tcafe:typolinkFileTitle value="{field.value}"/></f:link.typolink>
