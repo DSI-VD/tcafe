@@ -65,7 +65,7 @@ class Pagination
     {
         $this->config = $config;
         if ($this->config !== null) {
-            $queryBuilder->resetQueryParts(['select', 'limit']);
+            $queryBuilder->resetQueryParts(['select', 'limit', 'from']);
             $queryBuilder->getConcreteQueryBuilder()->setFirstResult(null);
             $queryBuilder->getConcreteQueryBuilder()->setMaxResults(null);
             $recordsCount = $queryBuilder

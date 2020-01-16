@@ -45,8 +45,8 @@ class DataFinder
         string $additionalWhereClause = '',
         int $currentPage = 0,
         array $filterValues = [],
-        string $sortField = '',
-        string $sort = ''
+        ?string $sortField = '',
+        ?string $sort = ''
     ): array {
         // Add additional where clause
         if (!empty($additionalWhereClause)) {
@@ -194,7 +194,7 @@ class DataFinder
      * @param string $sortField
      * @param string $sort
      */
-    protected function sort(string $sortField, string $sort)
+    protected function sort(?string $sortField, ?string $sort)
     {
         $orderBy = [];
         $defaultSortDir = isset($confSorting['order']) ?? 'ASC';

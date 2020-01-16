@@ -37,14 +37,14 @@ class TcafeController extends ActionController
     protected $action = '';
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $sort = '';
+    protected $sort = null;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $sortField = '';
+    protected $sortField = null;
 
     /**
      * Load and validate the configuration file.
@@ -59,8 +59,8 @@ class TcafeController extends ActionController
             $this->configuration = $fileLoader->load($this->settings['configurationFilePath'], YamlFileLoader::PROCESS_PLACEHOLDERS);
             $this->dataFinder = GeneralUtility::makeInstance(DataFinder::class, $this->configuration);
             $this->action = $this->request->getControllerActionName() == 'filter' ? 'list' : $this->request->getControllerActionName();
-            $this->sortField = $this->configuration[$this->action]['sorting']['field'] ?? '';
-            $this->sort = $this->configuration[$this->action]['sorting']['sort'] ?? 'ASC';
+//            $this->sortField = $this->configuration[$this->action]['sorting']['field'] ?? '';
+//            $this->sort = $this->configuration[$this->action]['sorting']['sort'] ?? 'ASC';
             ConfigurationValidator::validate($this->configuration, $this->action, $this->settings);
         } catch (ParseException | \RuntimeException $e) {
             throw new ConfigurationFileException('The was a problem loading the configuration file ' . $this->settings['configurationFilePath'] . ' : ' . $e->getMessage());
@@ -167,7 +167,7 @@ class TcafeController extends ActionController
     }
 
     /**
-     * Set the correct template.
+     * If fluidVariableName is set in configuration file we need to change the view to a StandaloneView.
      */
     protected function setTemplate(): void
     {
