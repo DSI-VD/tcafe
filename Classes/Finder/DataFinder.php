@@ -137,11 +137,11 @@ class DataFinder
                                         $joinTable,
                                         'mmTable',
                                         $this->queryBuilder->expr()->eq(
-                                            'mmTable.uid_local',
+                                            'mmTable.uid_foreign',
                                             $this->queryBuilder->quoteIdentifier($this->configuration['table'] . '.uid')
                                         )
                                     )->andWhere(
-                                        $this->queryBuilder->expr()->eq('mmTable.uid_foreign', $filterValues[$i])
+                                        $this->queryBuilder->expr()->eq('mmTable.uid_local', $filterValues[$i])
                                     );
                                     if ($joinTable === 'sys_category_record_mm') {
                                         $this->queryBuilder->andWhere(
@@ -169,19 +169,23 @@ class DataFinder
     protected function selectFields(string $action)
     {
         if ($this->configuration[$action]['fields']['pid']) {
-            $this->configuration[$action]['fields']['pid']['hidden'] = false;
+            $hidden = $this->configuration[$action]['fields']['pid']['hidden']?true:false;
+            $this->configuration[$action]['fields']['pid']['hidden'] = $hidden;
         } else {
             $this->queryBuilder->addSelect('pid');
             $this->configuration[$action]['fields']['pid']['hidden'] = true;
         }
         if ($this->configuration[$action]['fields']['uid']) {
-            $this->configuration[$action]['fields']['uid']['hidden'] = false;
+            $hidden = $this->configuration[$action]['fields']['uid']['hidden']?true:false;
+            $this->configuration[$action]['fields']['uid']['hidden'] = $hidden;
         } else {
             $this->queryBuilder->addSelect('uid');
             $this->configuration[$action]['fields']['uid']['hidden'] = true;
         }
         foreach ($this->configuration[$action]['fields'] as $key => $field) {
-            $this->queryBuilder->addSelect($key);
+            if(!$field['hidden']){
+                $this->queryBuilder->addSelect($key);
+            }
         }
     }
 
@@ -196,6 +200,8 @@ class DataFinder
         $orderBy = [];
         $defaultSortDir = isset($confSorting['order']) ?? 'ASC';
         $sortDirection = !empty($sort) ? $sort : $defaultSortDir;
+
+
         if (!empty($sortField)) {
             $orderBy = [
                 'sortField' => $sortField,

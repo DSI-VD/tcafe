@@ -58,6 +58,7 @@ class FilterFactory
         } else {
             $items[''] = '';
         }
+
         if (!isset($foreignTable)) {
             $items += FieldUtility::cleanSelectSingleItems(
                 $GLOBALS['TCA'][$table]['columns'][$config['field']]['config']['items']
