@@ -168,6 +168,11 @@ class DataFinder
      */
     protected function selectFields(string $action)
     {
+
+        if(!$this->configuration[$action]['fields']){
+            $this->configuration[$action]['fields'] = [];
+            $this->configuration[$action]['fields'][$GLOBALS['TCA'][$this->configuration['table']]['ctrl']['label']] = [];
+        }
         if ($this->configuration[$action]['fields']['pid']) {
             $hidden = $this->configuration[$action]['fields']['pid']['hidden']?true:false;
             $this->configuration[$action]['fields']['pid']['hidden'] = $hidden;
@@ -182,6 +187,7 @@ class DataFinder
             $this->queryBuilder->addSelect('uid');
             $this->configuration[$action]['fields']['uid']['hidden'] = true;
         }
+
         foreach ($this->configuration[$action]['fields'] as $key => $field) {
             if(!$field['hidden']){
                 $this->queryBuilder->addSelect($key);
