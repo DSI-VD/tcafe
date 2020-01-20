@@ -60,9 +60,14 @@ class FilterFactory
         }
 
         if (!isset($foreignTable)) {
-            $items += FieldUtility::cleanSelectSingleItems(
-                $GLOBALS['TCA'][$table]['columns'][$config['field']]['config']['items']
-            );
+
+            if($config['field']) {
+                $items += FieldUtility::cleanSelectSingleItems(
+                    $GLOBALS['TCA'][$table]['columns'][$config['field']]['config']['items']
+                );
+
+            };
+
         } else {
             $queryBuilderForeign = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($foreignTable);
             $queryBuilderLocal = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
