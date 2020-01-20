@@ -1,0 +1,58 @@
+<html lang="en" xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:tcafe="http://typo3.org/ns/Vd/Tcafe/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:render partial="Filter/Filter" arguments="{_all}" />
+
+<div class="row">
+    <f:for  each="{users}" as="user">
+        <div class="col-4">
+            <div class="card">
+
+                <tcafe:fal data="{tcafe:getDataFromRow(row: user)}"
+                           field="{user.relation_fal.name}"
+                           table="{configuration.table}" as="files">
+                    <f:for each="{files}" as="file" iteration="i">
+                        <f:if condition="{i.isFirst}">
+                            <f:switch expression="{file.type}">
+                                <f:case value="3">
+                                    <f:render partial="Types/File/Audio" arguments="{file: file, field: field, settings: settings}" />
+                                </f:case>
+                                <f:case value="4">
+                                    <f:render partial="Types/File/Video" arguments="{file: file, field: field, settings: settings}" />
+                                </f:case>
+                                <f:case value="5">
+                                    <f:render partial="Types/File/Document" arguments="{file: file, field: field, settings: settings}" />
+                                </f:case>
+                                <f:defaultCase>
+
+
+                                    <f:media file="{file}"
+                                             class="card-img-top"
+                                             width="{f:if(condition: user.relation_fal.config.mediaWidth, then: user.relation_fal.config.mediaWidth, else: settings.list.defaultMediaWidth)}"
+                                             height="{f:if(condition: user.relation_fal.config.mediaHeight, then: user.relation_fal.config.mediaHeight, else: settings.list.defaultMediaHeight)}"
+                                             alt="{file.alternative}"
+                                             title="{file.title}" />
+                                </f:defaultCase>
+                            </f:switch>
+                        </f:if>
+                    </f:for>
+                </tcafe:fal>
+                <div class="card-body">
+                    <h5 class="card-title">{user.title}</h5>
+                    <tcafe:relation uidLocal="{user.uid}"
+                                    table="{configuration.table}"
+                                    foreignFieldName="{user.relation_many.name}"
+                                    foreignFieldValue="{user.relation_many.value}"
+                                    foreignTableSelectFields="{user.relation_many.config.fields}"
+                                    sorting="{user.relation_many.config.sorting}"
+                                    as="tags">
+                        <f:for each="{tags}" as="tag">
+                            <f:format.html>{tag.bodytext}</f:format.html>
+                        </f:for>
+                    </tcafe:relation>
+                </div>
+            </div>
+        </div>
+    </f:for>
+</div>
+<f:render partial="Pagination/Pagination" arguments="{currentPage: currentPage, pagination: pagination, action: action}" />
+</html>
