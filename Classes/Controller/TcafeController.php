@@ -3,10 +3,12 @@ namespace Vd\Tcafe\Controller;
 
 use Symfony\Component\Yaml\Exception\ParseException;
 use TYPO3\CMS\Core\Configuration\Loader\YamlFileLoader;
+use TYPO3\CMS\Core\Error\DebugExceptionHandler;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use Vd\Tcafe\Domain\Model\Pagination;
 use Vd\Tcafe\Factory\FilterFactory;
