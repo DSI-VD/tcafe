@@ -1,8 +1,8 @@
 table: tx_tcafe_record
 storagePids: 13
 list:
-  fluidVariableName: users
-  templatePath: 'EXT:tcafe/Resources/Private/Templates/UserList.html'
+  fluidVariableName: tcafe
+  templatePath: 'EXT:tcafe/Resources/Private/Templates/TcafeList.html'
   filters:
     -
       type: Input

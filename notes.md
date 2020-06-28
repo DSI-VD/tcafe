@@ -3,15 +3,12 @@ DATA
 - Data for Fluid
 - Data for javascript @todo
 
-
 Demo
 -------------
 - add test sorts
 
-
 Fluid
 ---------------------
-
 
 Javscript View
 ---------------------
@@ -28,7 +25,6 @@ Sort
 Filter
 --------------
 - check filter with foreign values field.foreignTitle
-
 
 Relations
 ------------
